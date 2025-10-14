@@ -2,25 +2,55 @@ import React, { useState, type JSX } from "react";
 import "./Login.css";
 
 type LoginForm = {
-    email: string;
+    cpf: string;
     password: string;
     remember: boolean;
 };
 
-const fakeLogin = async (email: string, password: string) => {
+const isValidCPF = (value: string) => {
+    return true; // Temporarily disable CPF validation
+
+    const cpf = (value || "").replace(/\D/g, "");
+    if (cpf.length !== 11) return false;
+    if (/^(\d)\1+$/.test(cpf)) return false; // reject repeated digits
+    const digits = cpf.split("").map((d) => parseInt(d, 10));
+    let sum = 0;
+    for (let i = 0; i < 9; i++) sum += digits[i] * (10 - i);
+    let rev = (sum * 10) % 11;
+    if (rev === 10) rev = 0;
+    if (rev !== digits[9]) return false;
+    sum = 0;
+    for (let i = 0; i < 10; i++) sum += digits[i] * (11 - i);
+    rev = (sum * 10) % 11;
+    if (rev === 10) rev = 0;
+    return rev === digits[10];
+};
+
+const fakeLogin = async (cpf: string, password: string) => {
     await new Promise((res) => setTimeout(res, 900));
-    if (email === "user@example.com" && password === "password") {
+    // demo credentials: CPF 12345678909 and password "password"
+    if (cpf.replace(/\D/g, "") === "12345678909" && password === "password") {
         return {
             token: "fake-jwt-token-123",
-            user: { name: "Demo User", email },
+            user: { name: "Demo User", cpf },
         };
     }
     throw new Error("Invalid credentials");
 };
 
+const apiLogin = async (cpf: string, password: string) => {
+    const res = await fetch("http://localhost:5015/doctor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Cpf: cpf, Password: password }),
+    });
+    if (!res.ok) throw new Error("Login failed");
+    return res.json();
+};
+
 export default function Login(): JSX.Element {
     const [form, setForm] = useState<LoginForm>({
-        email: "",
+        cpf: "",
         password: "",
         remember: false,
     });
@@ -36,8 +66,8 @@ export default function Login(): JSX.Element {
         };
 
     const validate = (): string | null => {
-        if (!form.email.trim()) return "Email is required.";
-        if (!/^\S+@\S+\.\S+$/.test(form.email)) return "Enter a valid email.";
+        if (!form.cpf.trim()) return "CPF é obrigatório.";
+        if (!isValidCPF(form.cpf)) return "CPF inválido.";
         if (!form.password) return "Password is required.";
         if (form.password.length < 4) return "Password must be at least 4 characters.";
         return null;
@@ -53,12 +83,13 @@ export default function Login(): JSX.Element {
         }
         setLoading(true);
         try {
-            const res = await fakeLogin(form.email.trim(), form.password);
+            const res = await apiLogin(form.cpf.trim(), form.password);
             if (form.remember) {
                 localStorage.setItem("auth_token", res.token);
             } else {
                 sessionStorage.setItem("auth_token", res.token);
             }
+            alert(`Welcome, ${res.token}!`);
             window.location.href = "/";
         } catch (err: any) {
             setError(err?.message ?? "Login failed");
@@ -73,7 +104,7 @@ export default function Login(): JSX.Element {
                 <div id="login-heading" className="login-header">
                     <div className="title">Sign in</div>
                     <div className="subtitle">
-                        Use <strong>user@example.com</strong> / <strong>password</strong> for demo
+                        Use <strong>1234</strong> / <strong>12345</strong> for demo
                     </div>
                 </div>
 
@@ -81,16 +112,16 @@ export default function Login(): JSX.Element {
                     {error && <div className="error-message">{error}</div>}
 
                     <div className="form-group">
-                        <label htmlFor="email">Email</label>
+                        <label htmlFor="cpf">CPF</label>
                         <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            placeholder="you@example.com"
-                            value={form.email}
-                            onChange={onChange("email")}
+                            id="cpf"
+                            name="cpf"
+                            type="text"
+                            placeholder="000.000.000-00"
+                            value={form.cpf}
+                            onChange={onChange("cpf")}
                             className="input"
-                            autoComplete="email"
+                            autoComplete="off"
                             disabled={loading}
                         />
                     </div>

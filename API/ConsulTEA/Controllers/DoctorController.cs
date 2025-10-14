@@ -1,4 +1,5 @@
-﻿using ConsulTEA.Entities;
+﻿using ConsulTEA.Authentication;
+using ConsulTEA.Entities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,17 +8,20 @@ namespace ConsulTEA.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DoctorController : ControllerBase
+    public class DoctorController(ILogger<DoctorController> logger, TokenProvider tokenProvider)
+        : ControllerBase
     {
         [HttpPost(Name = "PostNewDoctor")]
         public IActionResult DoctorLogin(DoctorLoginRequest doctor) 
         {
-            //posible password = get doctor.password == doctor.cpf
-            if (doctor.Password == "12345")
-                return Ok();
+            logger.Log(LogLevel.Information, "Doctor Login Request");
+            
+            // possible password = get doctor.password == doctor.cpf
+            if (doctor is { Cpf: "1234", Password: "12345" })
+                return Ok(new { token = tokenProvider.GenerateToken("1234") });
             else
-                return BadRequest();               
+                return Unauthorized();               
+            
         }
-
     }
 }
