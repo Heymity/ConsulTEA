@@ -65,3 +65,11 @@ C:\Users\andre\source\repos\ConsulTEA\API\ConsulTEA\obj\Debug\net9.0\refint\Cons
 C:\Users\andre\source\repos\ConsulTEA\API\ConsulTEA\obj\Debug\net9.0\ConsulTEA.pdb
 C:\Users\andre\source\repos\ConsulTEA\API\ConsulTEA\obj\Debug\net9.0\ConsulTEA.genruntimeconfig.cache
 C:\Users\andre\source\repos\ConsulTEA\API\ConsulTEA\obj\Debug\net9.0\ref\ConsulTEA.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\Microsoft.IdentityModel.Logging.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\Microsoft.IdentityModel.Tokens.dll
+D:\Coding\LabSoft\Projeto\ConsulTEA\API\ConsulTEA\bin\Debug\net9.0\System.IdentityModel.Tokens.Jwt.dll
