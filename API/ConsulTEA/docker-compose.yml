@@ -1,0 +1,6 @@
+﻿services:
+  consultea:
+    image: consultea
+    build:
+      context: .
+      dockerfile: Dockerfile
