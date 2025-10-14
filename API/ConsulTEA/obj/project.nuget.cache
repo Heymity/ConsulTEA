@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "s5w/hJ+DipI=",
+  "dgSpecHash": "7Z1iVTcxNow=",
   "success": true,
-  "projectFilePath": "D:\\Coding\\LabSoft\\Projeto\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj",
+  "projectFilePath": "C:\\Users\\andre\\source\\repos\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\Gabriel\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.7\\microsoft.aspnetcore.openapi.9.0.7.nupkg.sha512",
-    "C:\\Users\\Gabriel\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+    "C:\\Users\\andre\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.7\\microsoft.aspnetcore.openapi.9.0.7.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
   ],
   "logs": []
 }
