@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ConsulTEA")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bfd3acb86733a5da5ca1106c1e082afd29493374")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8bd168c2931a4a7687c5a472271112f3345daeab")]
 [assembly: System.Reflection.AssemblyProductAttribute("ConsulTEA")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ConsulTEA")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
