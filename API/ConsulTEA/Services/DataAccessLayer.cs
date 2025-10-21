@@ -5,13 +5,18 @@ using Npgsql;
 
 namespace ConsulTEA.Services
 {
-    public class DatabaseTestService
+    public class DataAccessLayer
     {
         private readonly string _connectionString;
+        
+        private readonly ILogger<DataAccessLayer> _logger;
 
-        public DatabaseTestService(IConfiguration configuration)
+        public DataAccessLayer(IConfiguration configuration, ILogger<DataAccessLayer> logger)
         {
-            _connectionString = configuration.GetConnectionString("PostgreConnection");
+            _logger = logger;
+            _connectionString = configuration.GetConnectionString("postgres") ?? throw new ArgumentException(null, nameof(configuration));
+            
+            //_logger.Log(LogLevel.Information, $"Database connection string: {_connectionString}");
         }
 
         public async Task<bool> TestConnectionAsync()

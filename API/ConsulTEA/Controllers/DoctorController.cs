@@ -1,5 +1,6 @@
 ﻿using ConsulTEA.Authentication;
 using ConsulTEA.Entities;
+using ConsulTEA.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,12 +8,12 @@ namespace ConsulTEA.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DoctorController(ILogger<DoctorController> logger, TokenProvider tokenProvider)
+    public class DoctorController(ILogger<DoctorController> logger, TokenProvider tokenProvider, DataAccessLayer db)
         : ControllerBase
     {
         [HttpPost]
         [Route("[action]")]
-        public IActionResult Login(DoctorLoginRequest doctor) 
+        public IActionResult Login(DoctorLoginRequest doctor)
         {
             logger.Log(LogLevel.Information, "Doctor Login Request");
             
