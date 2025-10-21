@@ -19,6 +19,12 @@ namespace ConsulTEA.Services
             //_logger.Log(LogLevel.Information, $"Database connection string: {_connectionString}");
         }
 
+        public NpgsqlConnection GetConnection()
+        {
+            return new NpgsqlConnection(_connectionString);
+        }
+        
+        
         public async Task<bool> TestConnectionAsync()
         {
             try
