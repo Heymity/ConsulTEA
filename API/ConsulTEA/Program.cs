@@ -1,4 +1,5 @@
 using ConsulTEA.Authentication;
+using ConsulTEA.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<TokenProvider>();
+builder.Services.AddSingleton<DataAccessLayer>();
 
 builder.Services.AddCors(options =>
 {
