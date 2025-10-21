@@ -15,11 +15,7 @@ namespace ConsulTEA.Controllers
     {
         [HttpPost]
         [Route("[action]")]
-<<<<<<< HEAD
-        public IActionResult Login(DoctorLoginRequest doctor)
-=======
         public async Task<IActionResult> Login(DoctorLogInRequest doctor)
->>>>>>> ddc4c0d6621cb3c50e1cd53414a9c47f7e049d1a
         {
             logger.Log(LogLevel.Information, "Doctor Login Request");
 
