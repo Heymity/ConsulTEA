@@ -1,23 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\trola\\pcs3443\\ConsulTEA\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj": {}
+    "D:\\Coding\\USP\\LabSoft\\Projeto\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj": {}
   },
   "projects": {
-    "C:\\Users\\trola\\pcs3443\\ConsulTEA\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj": {
+    "D:\\Coding\\USP\\LabSoft\\Projeto\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\trola\\pcs3443\\ConsulTEA\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj",
+        "projectUniqueName": "D:\\Coding\\USP\\LabSoft\\Projeto\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj",
         "projectName": "ConsulTEA",
-        "projectPath": "C:\\Users\\trola\\pcs3443\\ConsulTEA\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj",
-        "packagesPath": "C:\\Users\\trola\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\trola\\pcs3443\\ConsulTEA\\ConsulTEA\\API\\ConsulTEA\\obj\\",
+        "projectPath": "D:\\Coding\\USP\\LabSoft\\Projeto\\ConsulTEA\\API\\ConsulTEA\\ConsulTEA.csproj",
+        "packagesPath": "C:\\Users\\GABRIEL\\.nuget\\packages\\",
+        "outputPath": "D:\\Coding\\USP\\LabSoft\\Projeto\\ConsulTEA\\API\\ConsulTEA\\obj\\",
         "projectStyle": "PackageReference",
+        "UsingMicrosoftNETSdk": false,
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\trola\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\GABRIEL\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -43,8 +44,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net9.0": {
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.305/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\GABRIEL\\.dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

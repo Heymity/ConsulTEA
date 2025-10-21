@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConsulTEA.Controllers
-
 {
     [ApiController]
     [Route("[controller]")]
     public class DoctorController(ILogger<DoctorController> logger, TokenProvider tokenProvider)
         : ControllerBase
     {
-        [HttpPost(Name = "PostNewDoctor")]
-        public IActionResult DoctorLogin(DoctorLoginRequest doctor) 
+        [HttpPost]
+        [Route("[action]")]
+        public IActionResult Login(DoctorLoginRequest doctor) 
         {
             logger.Log(LogLevel.Information, "Doctor Login Request");
             
