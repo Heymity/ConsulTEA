@@ -70,26 +70,6 @@ namespace ConsulTEA.Controllers
             }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {
-            _logger.Log(LogLevel.Information, "Get Patient Request");
-
-            var doctorId = User.Identity?.Name;
-            return Ok($"Dados do paciente {id}");
-        }
-
         // Inserts new patient
         [HttpPost("new")]
         public IActionResult InsertNewPatient(Patient patient)
