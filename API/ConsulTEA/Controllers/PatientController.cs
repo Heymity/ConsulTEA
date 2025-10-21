@@ -8,6 +8,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using ConsulTEA.Services;
+using Npgsql;
 
 namespace ConsulTEA.Controllers
 {
@@ -17,9 +19,9 @@ namespace ConsulTEA.Controllers
     public class PatientController : ControllerBase
     {
         private readonly ILogger<PatientController> _logger;
-        private readonly DatabaseTestService _dbService;
+        private readonly DataAccessLayer _dbService;
 
-        public PatientController(ILogger<PatientController> logger, DatabaseTestService dbService)
+        public PatientController(ILogger<PatientController> logger, DataAccessLayer dbService)
         {
             _logger = logger;
             _dbService = dbService;
@@ -39,7 +41,7 @@ namespace ConsulTEA.Controllers
                     return StatusCode(500, "Falha ao conectar ao banco de dados");
 
                 // Cria uma nova conexão PostgreSQL usando a mesma string de conexão
-                await using var conn = new NpgsqlConnection(_dbService.ConnectionString);
+                await using var conn = _dbService.GetConnection();
                 await conn.OpenAsync();
 
                 var query = "SELECT * FROM patients WHERE id = @id";
@@ -51,12 +53,12 @@ namespace ConsulTEA.Controllers
 
                 if (await reader.ReadAsync())
                 {
-                    return new Patient
+                    return Ok(new Patient
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("id")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         Cpf = reader.GetString(reader.GetOrdinal("diagnosis"))
-                    };
+                    });
                 }
 
                 return NotFound($"Paciente com ID {id} não encontrado.");
@@ -82,7 +84,7 @@ namespace ConsulTEA.Controllers
 
 
         {
-            logger.Log(LogLevel.Information, "Get Patient Request");
+            _logger.Log(LogLevel.Information, "Get Patient Request");
 
             var doctorId = User.Identity?.Name;
             return Ok($"Dados do paciente {id}");
@@ -92,7 +94,7 @@ namespace ConsulTEA.Controllers
         [HttpPost("new")]
         public IActionResult InsertNewPatient(Patient patient)
         {
-            logger.Log(LogLevel.Information, "Insert Patient Request");
+            _logger.Log(LogLevel.Information, "Insert Patient Request");
 
             var doctorId = User.Identity?.Name;
 
@@ -106,7 +108,7 @@ namespace ConsulTEA.Controllers
         [HttpPost("alter")]
         public IActionResult AlterPatientByCPF(int id)
         {
-            logger.Log(LogLevel.Information, "Get Patient Request");
+            _logger.Log(LogLevel.Information, "Get Patient Request");
 
             var doctorId = User.Identity?.Name;
             return Ok($"Dados do paciente {id}");
