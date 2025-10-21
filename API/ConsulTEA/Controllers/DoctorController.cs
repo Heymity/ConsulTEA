@@ -3,6 +3,8 @@ using ConsulTEA.Entities;
 using ConsulTEA.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security;
 
 namespace ConsulTEA.Controllers
 {
@@ -13,16 +15,58 @@ namespace ConsulTEA.Controllers
     {
         [HttpPost]
         [Route("[action]")]
+<<<<<<< HEAD
         public IActionResult Login(DoctorLoginRequest doctor)
+=======
+        public async Task<IActionResult> Login(DoctorLogInRequest doctor)
+>>>>>>> ddc4c0d6621cb3c50e1cd53414a9c47f7e049d1a
         {
             logger.Log(LogLevel.Information, "Doctor Login Request");
-            
-            // possible password = get doctor.password == doctor.cpf
-            if (doctor is { Cpf: "1234", Password: "12345" })
-                return Ok(new { token = tokenProvider.GenerateToken("1234") });
+
+            string dbPassword = await _context.INSERT_TABLE_NAME_HERE.FirstOrDefaultAsync(d => d.Cpf == doctor.Cpf);
+
+            if (doctor.Password == dbPassword)
+                return Ok(new { token = tokenProvider.GenerateToken(doctor.Cpf) });
             else
                 return Unauthorized();               
             
+        }
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<IActionResult> Register(DoctorRegisterRequest doctorRequest)
+        {
+            var claim = User.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti);
+            string AdminCpf = string.Empty;
+
+            if (claim is not null) AdminCpf = claim.Value;
+            else return Unauthorized();
+
+
+
+            bool isAdmin = await _context.Administrators.FirstOrDefaultAsync(d => d.Cpf == AdminCpf);
+            if (isAdmin)
+            {
+                Doctor existingDoctor = await _context.Doctors // BANCO DE DADOS DOKO
+                    .FirstOrDefaultAsync(d => d.Cpf == doctorRequest.Cpf);
+                if (existingDoctor != null)
+                {
+                    return BadRequest("A doctor with this CPF already exists.");
+                }
+
+                Doctor doctor = new Doctor
+                {
+                    Name = doctorRequest.Name,
+                    Crm = doctorRequest.Crm,
+                    Cpf = doctorRequest.Cpf,
+                    Specialty = doctorRequest.Specialty
+                };
+
+                _context.Doctors.Add(doctor); // BANCO DE DADOS DOKO
+                await _context.SaveChangesAsync(); // BANCO DE DADOS DOKO
+
+                return CreatedAtAction(nameof(Register), new { id = doctor.Id }, doctor);
+            }
+            else return Unauthorized();
         }
     }
 }
