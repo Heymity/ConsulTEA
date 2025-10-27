@@ -29,7 +29,7 @@ namespace ConsulTEA.Controllers
 
         // Gets pacient by cpf
         [HttpGet("get")]
-        public async Task<IActionResult> GetPatientByCpf(string cpf)
+        public async Task<IActionResult> GetPatientByCpf(PatientGetRequest request)
         {
             _logger.LogInformation("Get Patient Request");
 
@@ -40,7 +40,7 @@ namespace ConsulTEA.Controllers
 
                 var query = "SELECT * FROM bd_dados_paciente WHERE cpf = @cpf";
                 await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("cpf", cpf);
+                cmd.Parameters.AddWithValue("cpf", request.Cpf);
 
                 await using var reader = await cmd.ExecuteReaderAsync();
 
@@ -54,7 +54,7 @@ namespace ConsulTEA.Controllers
                     });
                 }
 
-                return NotFound($"Paciente com CPF {cpf} não encontrado.");
+                return NotFound($"Paciente com CPF {request.Cpf} não encontrado.");
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace ConsulTEA.Controllers
 
         // Inserts new patient
         [HttpPost("new")]
-        public async Task<IActionResult> InsertNewPatient(Patient patient)
+        public async Task<IActionResult> InsertNewPatient(PatientInsertRequest request)
         {
             _logger.LogInformation("Insert Patient Request");
 
@@ -76,8 +76,8 @@ namespace ConsulTEA.Controllers
 
                 var query = "INSERT INTO bd_dados_paciente (name, cpf) VALUES (@Name, @Cpf)";
                 await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("Name", patient.Name);
-                cmd.Parameters.AddWithValue("Cpf", patient.Cpf);
+                cmd.Parameters.AddWithValue("Name", request.Name);
+                cmd.Parameters.AddWithValue("Cpf", request.Cpf);
 
                 var result = await cmd.ExecuteNonQueryAsync();
 
@@ -93,7 +93,7 @@ namespace ConsulTEA.Controllers
             }
         }
 
-        // Alter patient
+        // Alter patient -- needs revision on the request
         [HttpPut("update/{id}")]
         public async Task<IActionResult> UpdatePatient(int id, Patient patient)
         {
