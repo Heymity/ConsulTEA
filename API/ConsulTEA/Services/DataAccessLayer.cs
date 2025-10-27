@@ -19,25 +19,18 @@ namespace ConsulTEA.Services
             //_logger.Log(LogLevel.Information, $"Database connection string: {_connectionString}");
         }
 
-        public NpgsqlConnection GetConnection()
-        {
-            return new NpgsqlConnection(_connectionString);
-        }
-        
-        
-        public async Task<bool> TestConnectionAsync()
+        public async Task<NpgsqlConnection> GetConnection()
         {
             try
             {
-                await using var conn = new NpgsqlConnection(_connectionString);
+                var conn = new NpgsqlConnection(_connectionString);
                 await conn.OpenAsync();
                 Console.WriteLine("Funfou, conexão estabelecida com sucesso");
-                return true;
+                return conn;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Não funfou, falha na conexão: {ex.Message}");
-                return false;
+                throw new Exception($"Não funfou, falha na conexão: {ex.Message}");
             }
         }
     }

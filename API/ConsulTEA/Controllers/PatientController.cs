@@ -15,7 +15,7 @@ namespace ConsulTEA.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [Authorize]
+    //[Authorize]
     public class PatientController : ControllerBase
     {
         private readonly ILogger<PatientController> _logger;
@@ -27,27 +27,20 @@ namespace ConsulTEA.Controllers
             _dbService = dbService;
         }
 
-        // Gets pacient by id
-        [HttpGet("get/{id}")]
-        public async Task<IActionResult> GetPatientById(int id)
+        // Gets pacient by cpf
+        [HttpGet("get")]
+        public async Task<IActionResult> GetPatientByCpf(string cpf)
         {
             _logger.LogInformation("Get Patient Request");
 
             try
             {
-                // Testa a conexão antes de usar
-                var connected = await _dbService.TestConnectionAsync();
-                if (!connected)
-                    return StatusCode(500, "Falha ao conectar ao banco de dados");
+                // Creates/checks db conection
+                await using var conn = await _dbService.GetConnection();
 
-                // Cria uma nova conexão PostgreSQL usando a mesma string de conexão
-                await using var conn = _dbService.GetConnection();
-                await conn.OpenAsync();
-
-                var query = "SELECT * FROM patients WHERE id = @id";
-
+                var query = "SELECT * FROM bd_dados_paciente WHERE cpf = @cpf";
                 await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("id", id);
+                cmd.Parameters.AddWithValue("cpf", cpf);
 
                 await using var reader = await cmd.ExecuteReaderAsync();
 
@@ -55,13 +48,13 @@ namespace ConsulTEA.Controllers
                 {
                     return Ok(new Patient
                     {
-                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Id = reader.GetInt32(reader.GetOrdinal("id_patient")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
-                        Cpf = reader.GetString(reader.GetOrdinal("diagnosis"))
+                        Cpf = reader.GetString(reader.GetOrdinal("cpf"))
                     });
                 }
 
-                return NotFound($"Paciente com ID {id} não encontrado.");
+                return NotFound($"Paciente com CPF {cpf} não encontrado.");
             }
             catch (Exception ex)
             {
@@ -72,26 +65,67 @@ namespace ConsulTEA.Controllers
 
         // Inserts new patient
         [HttpPost("new")]
-        public IActionResult InsertNewPatient(Patient patient)
+        public async Task<IActionResult> InsertNewPatient(Patient patient)
         {
-            _logger.Log(LogLevel.Information, "Insert Patient Request");
+            _logger.LogInformation("Insert Patient Request");
 
-            var doctorId = User.Identity?.Name;
+            try 
+            {
+                // Creates/checks db conection
+                await using var conn = await _dbService.GetConnection();
 
-            if (patient is { Cpf: "420", Name: "Luquinhas" })
-                return Ok($"Dados do paciente {patient} acessados pelo médico {doctorId}");
-            else
-                return Unauthorized();
+                var query = "INSERT INTO bd_dados_paciente (name, cpf) VALUES (@Name, @Cpf)";
+                await using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("Name", patient.Name);
+                cmd.Parameters.AddWithValue("Cpf", patient.Cpf);
+
+                var result = await cmd.ExecuteNonQueryAsync();
+
+                if (result > 0)
+                    return Ok("Paciente inserido com sucesso");
+                else
+                    return StatusCode(500, "Falha ao inserir paciente");
+            }
+            catch (Exception ex) 
+            {
+                _logger.LogError(ex, "Erro ao buscar paciente.");
+                return StatusCode(500, "Erro interno no servidor");
+            }
         }
 
         // Alter patient
-        [HttpPost("alter")]
-        public IActionResult AlterPatientByCPF(int id)
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdatePatient(int id, Patient patient)
         {
-            _logger.Log(LogLevel.Information, "Get Patient Request");
+            _logger.LogInformation($"Update Patient Request");
 
-            var doctorId = User.Identity?.Name;
-            return Ok($"Dados do paciente {id}");
+            try
+            {
+                await using var conn = await _dbService.GetConnection();
+
+                var query = """
+                    UPDATE bd_dados_paciente
+                    SET name = @Name, cpf = @Cpf
+                    WHERE id_patient = @Id
+                """;
+
+                await using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("Name", patient.Name);
+                cmd.Parameters.AddWithValue("Cpf", patient.Cpf);
+                cmd.Parameters.AddWithValue("Id", id);
+
+                var result = await cmd.ExecuteNonQueryAsync();
+
+                if (result > 0)
+                    return Ok($"Paciente com ID {id} atualizado com sucesso.");
+                else
+                    return NotFound($"Paciente com ID {id} não encontrado.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Erro ao atualizar paciente com ID {id}");
+                return StatusCode(500, "Erro interno no servidor");
+            }
         }
     }
 }
