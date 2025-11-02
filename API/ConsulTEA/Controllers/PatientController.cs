@@ -27,7 +27,7 @@ namespace ConsulTEA.Controllers
             _dbService = dbService;
         }
 
-        // Gets pacient by cpf
+        // Gets pacient by name
         [HttpGet("get")]
         public async Task<IActionResult> GetPatientByCpf(PatientGetRequest request)
         {
@@ -38,23 +38,30 @@ namespace ConsulTEA.Controllers
                 // Creates/checks db conection
                 await using var conn = await _dbService.GetConnection();
 
-                var query = "SELECT * FROM bd_dados_paciente WHERE cpf = @cpf";
+                var query = "SELECT * FROM PatientIdentification WHERE name ILIKE '%' || @Name || '%'";
                 await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("cpf", request.Cpf);
+                cmd.Parameters.AddWithValue("name", request.Name);
 
                 await using var reader = await cmd.ExecuteReaderAsync();
 
-                if (await reader.ReadAsync())
+                var patients = new List<Patient>();
+
+                while (await reader.ReadAsync())
                 {
-                    return Ok(new Patient
+                    patients.Add(new Patient
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("id_patient")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
-                        Cpf = reader.GetString(reader.GetOrdinal("cpf"))
+                        Cpf = reader.GetString(reader.GetOrdinal("cpf")),
+                        BirthDate = reader.GetDateTime(reader.GetOrdinal("birth_date")),
+                        ContactPhone = reader.GetString(reader.GetOrdinal("contact_phone")),
+                        GuardianName = reader.GetString(reader.GetOrdinal("guardian_name")),
+                        GuardianContact = reader.GetString(reader.GetOrdinal("guardian_contact")),
+                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at"))
                     });
                 }
 
-                return NotFound($"Paciente com CPF {request.Cpf} não encontrado.");
+                return Ok(patients);
             }
             catch (Exception ex)
             {
@@ -74,10 +81,20 @@ namespace ConsulTEA.Controllers
                 // Creates/checks db conection
                 await using var conn = await _dbService.GetConnection();
 
-                var query = "INSERT INTO bd_dados_paciente (name, cpf) VALUES (@Name, @Cpf)";
+                var query = """
+                    INSERT INTO PatientIdentification 
+                        (name, cpf, birth_date, contact_phone, guardian_name, guardian_contact, created_at) 
+                    VALUES 
+                        (@Name, @Cpf, @BirthDate, @ContactPhone, @GuardianName, @GuardianContact, @CreatedAt)
+                    """;
                 await using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("Name", request.Name);
                 cmd.Parameters.AddWithValue("Cpf", request.Cpf);
+                cmd.Parameters.AddWithValue("BirthDate", request.BirthDate);
+                cmd.Parameters.AddWithValue("ContactPhone", request.ContactPhone);
+                cmd.Parameters.AddWithValue("GuardianName", request.GuardianName);
+                cmd.Parameters.AddWithValue("GuardianContact", request.GuardianContact);
+                cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt);
 
                 var result = await cmd.ExecuteNonQueryAsync();
 
@@ -95,23 +112,38 @@ namespace ConsulTEA.Controllers
 
         // Alter patient -- needs revision on the request
         [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdatePatient(int id, Patient patient)
+        public async Task<IActionResult> UpdatePatient(int id, PatientUpdateRequest request)
         {
             _logger.LogInformation($"Update Patient Request");
+
+            if (request == null)
+                return BadRequest("Dados do paciente inválidos.");
 
             try
             {
                 await using var conn = await _dbService.GetConnection();
 
                 var query = """
-                    UPDATE bd_dados_paciente
-                    SET name = @Name, cpf = @Cpf
+                    UPDATE PatientIdentification
+                    SET 
+                        name = @Name,
+                        cpf = @Cpf,
+                        birth_date = @BirthDate,
+                        contact_phone = @ContactPhone,
+                        guardian_name = @GuardianName,
+                        guardian_contact = @GuardianContact,
+                        created_at = @CreatedAt,
                     WHERE id_patient = @Id
                 """;
 
                 await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("Name", patient.Name);
-                cmd.Parameters.AddWithValue("Cpf", patient.Cpf);
+                cmd.Parameters.AddWithValue("Name", request.Name ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("Cpf", request.Cpf ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("BirthDate", request.BirthDate ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("ContactPhone", request.ContactPhone ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("GuardianName", request.GuardianName ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("GuardianContact", request.GuardianContact ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("Id", id);
 
                 var result = await cmd.ExecuteNonQueryAsync();

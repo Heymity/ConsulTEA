@@ -5,6 +5,7 @@
 //using Microsoft.AspNetCore.Mvc;
 //using System.IdentityModel.Tokens.Jwt;
 //using System.Security;
+//using BCrypt.Net;
 
 //namespace ConsulTEA.Controllers
 //{
@@ -21,11 +22,13 @@
 
 //            string dbPassword = await _context.INSERT_TABLE_NAME_HERE.FirstOrDefaultAsync(d => d.Cpf == doctor.Cpf);
 
-//            if (doctor.Password == dbPassword)
+//            string hashed = BCrypt.Net.BCrypt.HashPassword(dbPassword, workFactor: 12);
+
+//            if (BCrypt.Net.BCrypt.Verify(doctor.Password, hashed))
 //                return Ok(new { token = tokenProvider.GenerateToken(doctor.Cpf) });
 //            else
-//                return Unauthorized();               
-            
+//                return Unauthorized();
+
 //        }
 //        [HttpPost]
 //        [Route("[action]")]

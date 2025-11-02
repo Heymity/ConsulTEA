@@ -1,5 +1,5 @@
 ﻿namespace ConsulTEA.Entities
 {
-    //public record AppointmentGetRequest(string Name, string Cpf);
-    public record AppointmentInsertRequest(string CpfDoctor, string CpfPatient, string Date, string Report);
+    public record AppointmentInsertRequest(int IdPatient, int IdDoctor, DateTime Date, string MainComplaint, string BehaviorObservation, string CommunicationNotes, string SensoryNotes, string SocialInteraction, string MedicationInUse, string EvolutionSummary, string NextSteps, DateTime CreatedAt);
+    public record AppointmentUpdateRequest(int IdPatient, int IdDoctor, DateTime Date, string MainComplaint, string BehaviorObservation, string CommunicationNotes, string SensoryNotes, string SocialInteraction, string MedicationInUse, string EvolutionSummary, string NextSteps, DateTime CreatedAt);
 }
