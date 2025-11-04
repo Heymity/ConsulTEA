@@ -1,21 +1,14 @@
-﻿using ConsulTEA.Authentication;
-using ConsulTEA.Entities;
-using Microsoft.AspNetCore.Authorization;
+﻿using ConsulTEA.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using ConsulTEA.Services;
+using Microsoft.AspNetCore.Authorization;
 using Npgsql;
 
 namespace ConsulTEA.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize]
     public class PatientController : ControllerBase
     {
         private readonly ILogger<PatientController> _logger;
@@ -38,7 +31,7 @@ namespace ConsulTEA.Controllers
                 // Creates/checks db conection
                 await using var conn = await _dbService.GetConnection();
 
-                var query = "SELECT * FROM PatientIdentification WHERE name ILIKE '%' || @Name || '%'";
+                var query = "SELECT * FROM PatientIdentification WHERE name LIKE '%' || @Name || '%'";
                 await using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("name", request.Name);
 
@@ -101,7 +94,7 @@ namespace ConsulTEA.Controllers
                 if (result > 0)
                     return Ok("Paciente inserido com sucesso");
                 else
-                    return StatusCode(500, "Falha ao inserir paciente");
+                    return BadRequest("Falha ao inserir paciente");
             }
             catch (Exception ex) 
             {
@@ -132,18 +125,18 @@ namespace ConsulTEA.Controllers
                         contact_phone = @ContactPhone,
                         guardian_name = @GuardianName,
                         guardian_contact = @GuardianContact,
-                        created_at = @CreatedAt,
+                        created_at = @CreatedAt
                     WHERE id_patient = @Id
                 """;
 
                 await using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("Name", request.Name ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("Cpf", request.Cpf ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("BirthDate", request.BirthDate ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("BirthDate", request.BirthDate);
                 cmd.Parameters.AddWithValue("ContactPhone", request.ContactPhone ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("GuardianName", request.GuardianName ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("GuardianContact", request.GuardianContact ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt);
                 cmd.Parameters.AddWithValue("Id", id);
 
                 var result = await cmd.ExecuteNonQueryAsync();
