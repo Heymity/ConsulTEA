@@ -43,7 +43,7 @@ namespace ConsulTEA.Controllers
                     reader.GetString(reader.GetOrdinal("password")), 
                     reader.IsDBNull(reader.GetOrdinal("crm")) ? string.Empty : reader.GetString(reader.GetOrdinal("crm")));
                 
-                if (dbResult.Password != adminData.Password) return Unauthorized("Incorrect Credentials");
+                if (!BCrypt.Net.BCrypt.Verify(adminData.Password, dbResult.Password)) return Unauthorized("Incorrect Credentials");
                 
                 logger.LogInformation($"Admin Logged successfully: {adminData.Cpf}");
                 var token = tokenProvider.GenerateToken(adminData.Cpf,
@@ -85,7 +85,7 @@ namespace ConsulTEA.Controllers
                 var createQuery = "INSERT INTO bd_admin (cpf, password) VALUES (@cpf, @password);";
                 await using var createCmd = new NpgsqlCommand(createQuery, conn);
                 createCmd.Parameters.AddWithValue("cpf", adminData.Cpf);
-                createCmd.Parameters.AddWithValue("password", adminData.Password);
+                createCmd.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(adminData.Password));
 
                 var insertResult = await createCmd.ExecuteNonQueryAsync();
                 
