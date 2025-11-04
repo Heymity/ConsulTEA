@@ -1,0 +1,131 @@
+/* ===== Reset básico ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== Cores e fonte base ===== */
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #e6f2ff; /* azul claro de fundo */
+  color: #1a1a1a;
+}
+
+/* ===== Header ===== */
+header {
+  background-color: #0077cc; /* azul médio */
+  color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+header nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-weight: 500;
+  transition: opacity 0.2s ease-in-out;
+}
+
+header nav a:hover {
+  opacity: 0.8;
+}
+
+/* ===== Hero Section ===== */
+main {
+  text-align: center;
+  padding: 6rem 2rem;
+  background: linear-gradient(to bottom right, #cce6ff, #e6f2ff);
+}
+
+main h2 {
+  font-size: 2.5rem;
+  color: #005fa3;
+  margin-bottom: 1rem;
+}
+
+main p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  color: #333;
+}
+
+main a {
+  background-color: #0077cc;
+  color: white;
+  padding: 0.9rem 2rem;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+main a:hover {
+  background-color: #005fa3;
+}
+
+/* ===== Features Section ===== */
+section {
+  background-color: white;
+  padding: 4rem 2rem;
+}
+
+section .container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+section .feature-card {
+  background-color: #f7fbff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+section .feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+section .feature-card .icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+section .feature-card h3 {
+  color: #005fa3;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== Footer ===== */
+footer {
+  background-color: #d9ecff;
+  color: #333;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  border-top: 1px solid #b3daff;
+}
+
+html, body {
+  overflow-x: hidden;
+}
