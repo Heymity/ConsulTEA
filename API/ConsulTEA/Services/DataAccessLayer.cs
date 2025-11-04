@@ -14,6 +14,7 @@ namespace ConsulTEA.Services
         public DataAccessLayer(IConfiguration configuration, ILogger<DataAccessLayer> logger)
         {
             _logger = logger;
+            _logger.LogInformation(configuration["ConnectionStrings:postgres"]);
             _connectionString = configuration.GetConnectionString("postgres") ?? throw new ArgumentException(null, nameof(configuration));
             
             //_logger.Log(LogLevel.Information, $"Database connection string: {_connectionString}");
