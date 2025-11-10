@@ -1,20 +1,25 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
+using ConsulTEA.Entities;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ConsulTEA.Authentication;
 
-public class TokenProvider
+public class TokenProvider(IConfiguration configuration)
 {
-    public string GenerateToken(string Cpf)
+    public string GenerateToken(string Cpf, PrivilegeLevel privilegeLevel)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = "veryveryverySecretkeyThatNoOneKnowsAboutShhhhhhDontShareTHis"u8.ToArray();
+        var key = Encoding.UTF8.GetBytes(configuration["jwt:key"] ?? throw new InvalidOperationException());
 
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.Jti, Cpf)
+            new(JwtRegisteredClaimNames.Jti, Cpf),
         };
+        
+        if (privilegeLevel.HasFlag(PrivilegeLevel.Doctor)) claims.Add(new Claim(ClaimTypes.Role, "doctor"));
+        if (privilegeLevel.HasFlag(PrivilegeLevel.Admin)) claims.Add(new Claim(ClaimTypes.Role, "admin"));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

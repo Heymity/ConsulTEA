@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using System.Text;
 using ConsulTEA.Authentication;
 using ConsulTEA.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -6,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Configuration.AddUserSecrets<Program>(); 
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -25,15 +28,19 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("Doctor", policy => policy.RequireRole("doctor"));
+    opt.AddPolicy("Admin", policy => policy.RequireRole("admin"));
+});
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
 {
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidIssuer = "https://localhost:5001",
         ValidAudience = "https://localhost:5001",
-        IssuerSigningKey =
-            new SymmetricSecurityKey("veryveryverySecretkeyThatNoOneKnowsAboutShhhhhhDontShareTHis"u8.ToArray()),
+        IssuerSigningKey = 
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwt:key"] ?? throw new InvalidOperationException())),
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateIssuerSigningKey = true,

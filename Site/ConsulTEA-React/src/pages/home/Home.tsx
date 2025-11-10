@@ -31,10 +31,10 @@ export default function Home() {
               <a href="/login" className="hover:underline">Login</a>
             ) : (
               <>
-                <a href="/cadastro" className="hover:underline">Cadastro de Paciente</a>
+                <a href="/register-patient" className="hover:underline">Cadastro de Paciente</a>
                 <button
                   onClick={handleLogout}
-                  className="ml-2 bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+                  className="hover:underline"
                 >
                   Sair
                 </button>
@@ -46,9 +46,12 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="flex-grow w-full px-4 py-16 text-center">
+        <div>
         <h2 className="text-4xl font-bold mb-4 text-blue-700">
           Compreendendo o Autismo com Cuidado e Tecnologia
         </h2>
+        
+
         <p className="text-lg mb-8">
           Uma plataforma para profissionais registrarem anamneses e acompanharem
           o desenvolvimento de pessoas com TEA, unindo empatia e ciência.
@@ -63,12 +66,13 @@ export default function Home() {
           </a>
         ) : (
           <a
-            href="/cadastro"
+            href="/register-patient"
             className="bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition"
           >
             Cadastrar novo paciente
           </a>
         )}
+        </div>
       </main>
 
       {/* Features */}
