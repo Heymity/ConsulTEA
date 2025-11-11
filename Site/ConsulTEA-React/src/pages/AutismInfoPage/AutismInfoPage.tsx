@@ -11,7 +11,7 @@ const AutismInfoPage: React.FC = () => {
           <h1 className="text-2xl font-bold">TEA Data</h1>
           <nav className="space-x-4">
             <a href="/" className="hover:underline">Início</a>
-            <a href="/dados" className="hover:underline">Dados</a>
+            <a href="/autism-info" className="hover:underline">Dados</a>
             <a href="/sobre" className="hover:underline">Sobre</a>
           </nav>
         </div>

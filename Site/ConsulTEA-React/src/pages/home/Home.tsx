@@ -21,11 +21,11 @@ export default function Home() {
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 text-gray-800">
       {/* Header */}
       <header className="bg-blue-600 text-white p-4 shadow-md">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
+        <div className="w-full flex justify-between items-center px-8">
           <h1 className="text-2xl font-bold">TEA Data</h1>
           <nav className="space-x-4">
             <a href="/" className="hover:underline">Início</a>
-            <a href="/dados" className="hover:underline">Dados</a>
+            <a href="/autism-info" className="hover:underline">Dados</a>
             <a href="/sobre" className="hover:underline">Sobre</a>
             {!isLoggedIn ? (
               <a href="/login" className="hover:underline">Login</a>
