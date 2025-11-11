@@ -1,5 +1,6 @@
 ﻿using ConsulTEA.Entities;
 using ConsulTEA.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 
@@ -7,7 +8,7 @@ namespace ConsulTEA.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    //[Authorize]
+    [Authorize("Doctor")]
     public class AppointmentController : ControllerBase
     {
         private readonly ILogger<AppointmentController> _logger;
@@ -17,6 +18,26 @@ namespace ConsulTEA.Controllers
         {
             _logger = logger;
             _dbService = dbService;
+        }
+
+        private static Appointment ReadAppointment(NpgsqlDataReader reader)
+        {
+            return new Appointment
+            {
+                IdAppointment = reader.GetInt32(reader.GetOrdinal("id_appointment")),
+                IdDoctor = reader.GetInt32(reader.GetOrdinal("id_doctor")),
+                IdPatient = reader.GetInt32(reader.GetOrdinal("id_patient")),
+                Date = reader.GetDateTime(reader.GetOrdinal("date")),
+                MainComplaint = reader.GetString(reader.GetOrdinal("main_complaint")),
+                BehaviorObservation = reader.GetString(reader.GetOrdinal("behavior_observation")),
+                CommunicationNotes = reader.GetString(reader.GetOrdinal("communication_notes")),
+                SensoryNotes = reader.GetString(reader.GetOrdinal("sensory_notes")),
+                SocialInteraction = reader.GetString(reader.GetOrdinal("social_interaction")),
+                MedicationInUse = reader.GetString(reader.GetOrdinal("medication_in_use")),
+                EvolutionSummary = reader.GetString(reader.GetOrdinal("evolution_summary")),
+                NextSteps = reader.GetString(reader.GetOrdinal("next_steps")),
+                CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at"))
+            };
         }
 
         // Returns the Data of an Appointment by the Appointment Id
@@ -30,7 +51,7 @@ namespace ConsulTEA.Controllers
                 // Creates/checks db conection
                 await using var conn = await _dbService.GetConnection();
 
-                var query = "SELECT * FROM bd_dados_exame WHERE id_appointment = @id";
+                const string query = "SELECT * FROM bd_dados_exame WHERE id_appointment = @id";
                 await using var cmd = new NpgsqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("id", id);
 
@@ -38,22 +59,7 @@ namespace ConsulTEA.Controllers
 
                 if (await reader.ReadAsync())
                 {
-                    return Ok(new Appointment
-                    {
-                        IdAppointment = reader.GetInt32(reader.GetOrdinal("id_appointment")),
-                        IdDoctor = reader.GetInt32(reader.GetOrdinal("id_doctor")),
-                        IdPatient = reader.GetInt32(reader.GetOrdinal("id_patient")),
-                        Date = reader.GetDateTime(reader.GetOrdinal("date")),
-                        MainComplaint = reader.GetString(reader.GetOrdinal("main_complaint")),
-                        BehaviorObservation = reader.GetString(reader.GetOrdinal("behavior_observation")),
-                        CommunicationNotes = reader.GetString(reader.GetOrdinal("communication_notes")),
-                        SensoryNotes = reader.GetString(reader.GetOrdinal("sensory_notes")),
-                        SocialInteraction = reader.GetString(reader.GetOrdinal("social_interaction")),
-                        MedicationInUse = reader.GetString(reader.GetOrdinal("medication_in_use")),
-                        EvolutionSummary = reader.GetString(reader.GetOrdinal("evolution_summary")),
-                        NextSteps = reader.GetString(reader.GetOrdinal("next_steps")),
-                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at"))
-                    });
+                    return Ok(ReadAppointment(reader));
                 }
 
                 return NotFound($"Exame com id {id} não encontrado.");
@@ -86,22 +92,7 @@ namespace ConsulTEA.Controllers
 
                 if (await reader.ReadAsync())
                 {
-                    appointments.Add(new Appointment
-                    {
-                        IdAppointment = reader.GetInt32(reader.GetOrdinal("id_appointment")),
-                        IdDoctor = reader.GetInt32(reader.GetOrdinal("id_doctor")),
-                        IdPatient = reader.GetInt32(reader.GetOrdinal("id_patient")),
-                        Date = reader.GetDateTime(reader.GetOrdinal("date")),
-                        MainComplaint = reader.GetString(reader.GetOrdinal("main_complaint")),
-                        BehaviorObservation = reader.GetString(reader.GetOrdinal("behavior_observation")),
-                        CommunicationNotes = reader.GetString(reader.GetOrdinal("communication_notes")),
-                        SensoryNotes = reader.GetString(reader.GetOrdinal("sensory_notes")),
-                        SocialInteraction = reader.GetString(reader.GetOrdinal("social_interaction")),
-                        MedicationInUse = reader.GetString(reader.GetOrdinal("medication_in_use")),
-                        EvolutionSummary = reader.GetString(reader.GetOrdinal("evolution_summary")),
-                        NextSteps = reader.GetString(reader.GetOrdinal("next_steps")),
-                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at"))
-                    });
+                    appointments.Add(ReadAppointment(reader));
                 }
 
                 return Ok(appointments);
@@ -134,22 +125,7 @@ namespace ConsulTEA.Controllers
 
                 if (await reader.ReadAsync())
                 {
-                    appointments.Add(new Appointment
-                    {
-                        IdAppointment = reader.GetInt32(reader.GetOrdinal("id_appointment")),
-                        IdDoctor = reader.GetInt32(reader.GetOrdinal("id_doctor")),
-                        IdPatient = reader.GetInt32(reader.GetOrdinal("id_patient")),
-                        Date = reader.GetDateTime(reader.GetOrdinal("date")),
-                        MainComplaint = reader.GetString(reader.GetOrdinal("main_complaint")),
-                        BehaviorObservation = reader.GetString(reader.GetOrdinal("behavior_observation")),
-                        CommunicationNotes = reader.GetString(reader.GetOrdinal("communication_notes")),
-                        SensoryNotes = reader.GetString(reader.GetOrdinal("sensory_notes")),
-                        SocialInteraction = reader.GetString(reader.GetOrdinal("social_interaction")),
-                        MedicationInUse = reader.GetString(reader.GetOrdinal("medication_in_use")),
-                        EvolutionSummary = reader.GetString(reader.GetOrdinal("evolution_summary")),
-                        NextSteps = reader.GetString(reader.GetOrdinal("next_steps")),
-                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at"))
-                    });
+                    appointments.Add(ReadAppointment(reader));
                 }
 
                 return Ok(appointments);
@@ -222,10 +198,7 @@ namespace ConsulTEA.Controllers
 
                 var result = await cmd.ExecuteNonQueryAsync();
 
-                if (result > 0)
-                    return Ok("Exame inserido com sucesso");
-                else
-                    return StatusCode(500, "Falha ao inserir exame");
+                return result > 0 ? Ok("Exame inserido com sucesso") : StatusCode(500, "Falha ao inserir exame");
             }
             catch (Exception ex)
             {
@@ -263,7 +236,7 @@ namespace ConsulTEA.Controllers
                         evolution_summary = @evolutionSummary,
                         next_steps = @nextSteps,
                         updated_at = @updatedAt
-                    WHERE id = @id
+                    WHERE id_appointment = @id
                 """;
 
                 await using var cmd = new NpgsqlCommand(query, conn);
@@ -279,13 +252,11 @@ namespace ConsulTEA.Controllers
                 cmd.Parameters.AddWithValue("evolutionSummary", request.EvolutionSummary);
                 cmd.Parameters.AddWithValue("nextSteps", request.NextSteps);
                 cmd.Parameters.AddWithValue("createdAt", request.CreatedAt);
+                cmd.Parameters.AddWithValue("id", id);
 
                 var result = await cmd.ExecuteNonQueryAsync();
 
-                if (result > 0)
-                    return Ok("Exame atualizado com sucesso");
-                else
-                    return StatusCode(500, "Falha ao atualizar exame");
+                return result > 0 ? Ok("Exame atualizado com sucesso") : StatusCode(500, "Falha ao atualizar exame");
             }
             catch (Exception ex)
             {
