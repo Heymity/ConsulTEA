@@ -4,153 +4,144 @@ using ConsulTEA.Services;
 using Microsoft.AspNetCore.Authorization;
 using Npgsql;
 
-namespace ConsulTEA.Controllers
+namespace ConsulTEA.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Authorize]
+public class PatientController(ILogger<PatientController> logger, DataAccessLayer dbService)
+    : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    [Authorize]
-    public class PatientController : ControllerBase
+    // Gets pacient by name
+    [HttpGet("get")]
+    public async Task<IActionResult> GetPatientByCpf(PatientGetRequest request)
     {
-        private readonly ILogger<PatientController> _logger;
-        private readonly DataAccessLayer _dbService;
+        logger.LogInformation("Get Patient Request");
 
-        public PatientController(ILogger<PatientController> logger, DataAccessLayer dbService)
+        try
         {
-            _logger = logger;
-            _dbService = dbService;
-        }
+            // Creates/checks db conection
+            await using var conn = await dbService.GetConnection();
 
-        // Gets pacient by name
-        [HttpGet("get")]
-        public async Task<IActionResult> GetPatientByCpf(PatientGetRequest request)
-        {
-            _logger.LogInformation("Get Patient Request");
+            var query = "SELECT * FROM PatientIdentification WHERE name LIKE '%' || @Name || '%'";
+            await using var cmd = new NpgsqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("name", request.Name);
 
-            try
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            var patients = new List<Patient>();
+
+            while (await reader.ReadAsync())
             {
-                // Creates/checks db conection
-                await using var conn = await _dbService.GetConnection();
-
-                var query = "SELECT * FROM PatientIdentification WHERE name LIKE '%' || @Name || '%'";
-                await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("name", request.Name);
-
-                await using var reader = await cmd.ExecuteReaderAsync();
-
-                var patients = new List<Patient>();
-
-                while (await reader.ReadAsync())
+                patients.Add(new Patient
                 {
-                    patients.Add(new Patient
-                    {
-                        Id = reader.GetInt32(reader.GetOrdinal("id_patient")),
-                        Name = reader.GetString(reader.GetOrdinal("name")),
-                        Cpf = reader.GetString(reader.GetOrdinal("cpf")),
-                        BirthDate = reader.GetDateTime(reader.GetOrdinal("birth_date")),
-                        ContactPhone = reader.GetString(reader.GetOrdinal("contact_phone")),
-                        GuardianName = reader.GetString(reader.GetOrdinal("guardian_name")),
-                        GuardianContact = reader.GetString(reader.GetOrdinal("guardian_contact")),
-                        CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at"))
-                    });
-                }
+                    Id = reader.GetInt32(reader.GetOrdinal("id_patient")),
+                    Name = reader.GetString(reader.GetOrdinal("name")),
+                    Cpf = reader.GetString(reader.GetOrdinal("cpf")),
+                    BirthDate = reader.GetDateTime(reader.GetOrdinal("birth_date")),
+                    ContactPhone = reader.GetString(reader.GetOrdinal("contact_phone")),
+                    GuardianName = reader.GetString(reader.GetOrdinal("guardian_name")),
+                    GuardianContact = reader.GetString(reader.GetOrdinal("guardian_contact")),
+                    CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at"))
+                });
+            }
 
-                return Ok(patients);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erro ao buscar paciente.");
-                return StatusCode(500, "Erro interno no servidor");
-            }
+            return Ok(patients);
         }
-
-        // Inserts new patient
-        [HttpPost("new")]
-        public async Task<IActionResult> InsertNewPatient(PatientInsertRequest request)
+        catch (Exception ex)
         {
-            _logger.LogInformation("Insert Patient Request");
-
-            try 
-            {
-                // Creates/checks db conection
-                await using var conn = await _dbService.GetConnection();
-
-                var query = """
-                    INSERT INTO PatientIdentification 
-                        (name, cpf, birth_date, contact_phone, guardian_name, guardian_contact, created_at) 
-                    VALUES 
-                        (@Name, @Cpf, @BirthDate, @ContactPhone, @GuardianName, @GuardianContact, @CreatedAt)
-                    """;
-                await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("Name", request.Name);
-                cmd.Parameters.AddWithValue("Cpf", request.Cpf);
-                cmd.Parameters.AddWithValue("BirthDate", request.BirthDate);
-                cmd.Parameters.AddWithValue("ContactPhone", request.ContactPhone);
-                cmd.Parameters.AddWithValue("GuardianName", request.GuardianName);
-                cmd.Parameters.AddWithValue("GuardianContact", request.GuardianContact);
-                cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt);
-
-                var result = await cmd.ExecuteNonQueryAsync();
-
-                if (result > 0)
-                    return Ok("Paciente inserido com sucesso");
-                else
-                    return BadRequest("Falha ao inserir paciente");
-            }
-            catch (Exception ex) 
-            {
-                _logger.LogError(ex, "Erro ao buscar paciente.");
-                return StatusCode(500, "Erro interno no servidor");
-            }
+            logger.LogError(ex, "Erro ao buscar paciente.");
+            return StatusCode(500, "Erro interno no servidor");
         }
+    }
 
-        // Alter patient -- needs revision on the request
-        [HttpPut("update/{id}")]
-        public async Task<IActionResult> UpdatePatient(int id, PatientUpdateRequest request)
+    // Inserts new patient
+    [HttpPost("new")]
+    public async Task<IActionResult> InsertNewPatient(PatientInsertRequest request)
+    {
+        logger.LogInformation("Insert Patient Request");
+
+        try 
         {
-            _logger.LogInformation($"Update Patient Request");
+            // Creates/checks db conection
+            await using var conn = await dbService.GetConnection();
 
-            if (request == null)
-                return BadRequest("Dados do paciente inválidos.");
+            var query = """
+                        INSERT INTO PatientIdentification 
+                            (name, cpf, birth_date, contact_phone, guardian_name, guardian_contact, created_at) 
+                        VALUES 
+                            (@Name, @Cpf, @BirthDate, @ContactPhone, @GuardianName, @GuardianContact, @CreatedAt)
+                        """;
+            await using var cmd = new NpgsqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("Name", request.Name);
+            cmd.Parameters.AddWithValue("Cpf", request.Cpf);
+            cmd.Parameters.AddWithValue("BirthDate", request.BirthDate);
+            cmd.Parameters.AddWithValue("ContactPhone", request.ContactPhone);
+            cmd.Parameters.AddWithValue("GuardianName", request.GuardianName);
+            cmd.Parameters.AddWithValue("GuardianContact", request.GuardianContact);
+            cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt);
 
-            try
-            {
-                await using var conn = await _dbService.GetConnection();
+            var result = await cmd.ExecuteNonQueryAsync();
 
-                var query = """
-                    UPDATE PatientIdentification
-                    SET 
-                        name = @Name,
-                        cpf = @Cpf,
-                        birth_date = @BirthDate,
-                        contact_phone = @ContactPhone,
-                        guardian_name = @GuardianName,
-                        guardian_contact = @GuardianContact,
-                        created_at = @CreatedAt
-                    WHERE id_patient = @Id
-                """;
+            if (result > 0)
+                return Ok("Paciente inserido com sucesso");
+            else
+                return BadRequest("Falha ao inserir paciente");
+        }
+        catch (Exception ex) 
+        {
+            logger.LogError(ex, "Erro ao buscar paciente.");
+            return StatusCode(500, "Erro interno no servidor");
+        }
+    }
 
-                await using var cmd = new NpgsqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("Name", request.Name ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("Cpf", request.Cpf ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("BirthDate", request.BirthDate);
-                cmd.Parameters.AddWithValue("ContactPhone", request.ContactPhone ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("GuardianName", request.GuardianName ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("GuardianContact", request.GuardianContact ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt);
-                cmd.Parameters.AddWithValue("Id", id);
+    // Alter patient -- needs revision on the request
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> UpdatePatient(int id, PatientUpdateRequest request)
+    {
+        logger.LogInformation($"Update Patient Request");
 
-                var result = await cmd.ExecuteNonQueryAsync();
+        if (request == null)
+            return BadRequest("Dados do paciente inválidos.");
 
-                if (result > 0)
-                    return Ok($"Paciente com ID {id} atualizado com sucesso.");
-                else
-                    return NotFound($"Paciente com ID {id} não encontrado.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Erro ao atualizar paciente com ID {id}");
-                return StatusCode(500, "Erro interno no servidor");
-            }
+        try
+        {
+            await using var conn = await dbService.GetConnection();
+
+            var query = """
+                            UPDATE PatientIdentification
+                            SET 
+                                name = @Name,
+                                cpf = @Cpf,
+                                birth_date = @BirthDate,
+                                contact_phone = @ContactPhone,
+                                guardian_name = @GuardianName,
+                                guardian_contact = @GuardianContact,
+                                created_at = @CreatedAt
+                            WHERE id_patient = @Id
+                        """;
+
+            await using var cmd = new NpgsqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("Name", request.Name ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("Cpf", request.Cpf ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("BirthDate", request.BirthDate);
+            cmd.Parameters.AddWithValue("ContactPhone", request.ContactPhone ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("GuardianName", request.GuardianName ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("GuardianContact", request.GuardianContact ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("CreatedAt", request.CreatedAt);
+            cmd.Parameters.AddWithValue("Id", id);
+
+            var result = await cmd.ExecuteNonQueryAsync();
+
+            if (result > 0)
+                return Ok($"Paciente com ID {id} atualizado com sucesso.");
+            else
+                return NotFound($"Paciente com ID {id} não encontrado.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, $"Erro ao atualizar paciente com ID {id}");
+            return StatusCode(500, "Erro interno no servidor");
         }
     }
 }
