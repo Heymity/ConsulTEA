@@ -5,6 +5,9 @@ import Home from './pages/home/Home';
 import RegisterPatient from './pages/registerPatient/RegisterPatient';
 import RegisterDoctor from './pages/registerDoctor/registerDoctor';
 import AutismInfoPage from './pages/AutismInfoPage/AutismInfoPage';
+import SeePatients from './pages/seePatients/seePatients';
+import AddAppointment from './pages/addAppointment/addApointment';
+
 
 function App() {
   return (
@@ -16,6 +19,8 @@ function App() {
         <Route path="/register-patient" element={<RegisterPatient />} />
         <Route path="/register-doctor" element={<RegisterDoctor />} />
         <Route path="/autism-info" element={<AutismInfoPage />} />
+        <Route path="/see-patients" element={<SeePatients />} />
+        <Route path="/add-appointment" element={<AddAppointment />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </BrowserRouter>
