@@ -1,0 +1,100 @@
+/* ===== Base ===== */
+
+body {
+  background-color: #e6f2ff; /* igual à home */
+}
+
+/* Header desktop spacing */
+header nav a {
+  font-size: 1.15rem;
+  margin-left: 2rem;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+}
+
+
+/* Header nav adjustments */
+header nav a {
+  font-size: 1.1rem;
+  margin-left: rem;
+  padding: 0.5rem 0.8rem;
+  font-weight: 600;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #cce6ff; /* azul suave uniforme */
+  color: #1a1a1a;
+}
+
+/* ===== Form Container ===== */
+form {
+  background-color: #ffffff;
+  padding: 3rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h2 {
+  color: #005fa3;
+  font-weight: 700;
+}
+
+/* ===== Inputs ===== */
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #b3daff;
+  background-color: #f7fbff;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: #0077cc;
+  background-color: #ffffff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 119, 204, 0.4);
+}
+
+label {
+  font-weight: 600;
+  color: #003d66;
+}
+
+/* ===== Button ===== */
+button[type="submit"] {
+  background-color: #0077cc;
+  border: none;
+  padding: 0.9rem;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #005fa3;
+}
+
+/* ===== Page Layout ===== */
+html, body {
+  overflow-x: hidden;
+}
+
+/* ===== Main Background Gradient ===== */
+main {
+  background: linear-gradient(to bottom right, #cce6ff, #e6f2ff);
+  padding: 6rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}

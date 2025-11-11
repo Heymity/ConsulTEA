@@ -3,13 +3,9 @@ using ConsulTEA.Authentication;
 using ConsulTEA.Entities;
 using ConsulTEA.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Npgsql;
-using System.Data.Common;
-using System.IdentityModel.Tokens.Jwt;
-using System.Numerics;
-using System.Security;
+
 
 namespace ConsulTEA.Controllers
 {
@@ -35,7 +31,9 @@ namespace ConsulTEA.Controllers
 
             await using var conn = await _dbService.GetConnection();
 
+
             var query = "SELECT bdi.\"password\" FROM public.bd_doctor_identification AS bdi where bdi.cpf = @cpf" ;
+
             await using var cmd = new NpgsqlCommand(query, conn);
             cmd.Parameters.AddWithValue("cpf", doctor.Cpf);
             await using var reader = await cmd.ExecuteReaderAsync();
@@ -51,6 +49,7 @@ namespace ConsulTEA.Controllers
             }
             return NotFound($"Medico com cpf {doctor.Cpf} não encontrado.");
 
+
         }
         [HttpPost("post/register")]
         [Authorize("Admin")]
@@ -58,28 +57,43 @@ namespace ConsulTEA.Controllers
         {
             _logger.Log(LogLevel.Information, "Doctor Register Request");
 
-            await using var conn = await _dbService.GetConnection();
+            try {
+                await using var conn = await _dbService.GetConnection();
 
-            var query = "SELECT bdi.\"cpf\" FROM public.bd_doctor_identification where bdi.cpf = @cpf";
-            await using var cmd = new NpgsqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("cpf", doctorRequest.Cpf);
-            await using var reader = await cmd.ExecuteReaderAsync();
-            if (await reader.ReadAsync())
-            {
-                if (reader.IsDBNull(reader.GetOrdinal("cpf"))) 
+                var query = "SELECT cpf FROM bd_doctor_identification where cpf = @cpf";
+                await using var cmd = new NpgsqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("cpf", doctorRequest.Cpf);
+                var cpf = await cmd.ExecuteScalarAsync();
+                if (cpf is null)
                 {
-                    var insertQuery = "INSERT INTO public.bd_doctor_identification(name, cpf, crm, specialty, email, password) VALUES (@name, @cpf, @crm, @specialty,@email, @password)";
-                    cmd.Parameters.AddWithValue("name", doctorRequest.Name);
-                    cmd.Parameters.AddWithValue("cpf", doctorRequest.Cpf);
-                    cmd.Parameters.AddWithValue("crm", doctorRequest.Crm);
-                    cmd.Parameters.AddWithValue("specialty", doctorRequest.Specialty);
-                    cmd.Parameters.AddWithValue("email", doctorRequest.Email);
-                    cmd.Parameters.AddWithValue("password", doctorRequest.Password);
+                        var insertQuery = "INSERT INTO public.bd_doctor_identification(name, cpf, crm, specialty, email, password) VALUES (@name, @cpf, @crm, @specialty,@email, @password)";
+                        await using var insertCmd = new NpgsqlCommand(insertQuery, conn);
+                        insertCmd.Parameters.AddWithValue("name", doctorRequest.Name);
+                        insertCmd.Parameters.AddWithValue("cpf", doctorRequest.Cpf);
+                        insertCmd.Parameters.AddWithValue("crm", doctorRequest.Crm);
+                        insertCmd.Parameters.AddWithValue("specialty", doctorRequest.Specialty);
+                        insertCmd.Parameters.AddWithValue("email", doctorRequest.Email);
+                        insertCmd.Parameters.AddWithValue("password", doctorRequest.Password);
+
+                        var result = await insertCmd.ExecuteNonQueryAsync();
+
+
+                    if (result > 0)
+                    return Ok("Medico adicionado com sucesso");
+                    else
+                        return NotFound("opsie daisy");
                 }
-                return BadRequest("A doctor with this CPF already exists.");
+                return NotFound($"Medico com cpf {doctorRequest.Cpf} não encontrado.");
             }
-            return NotFound($"Medico com cpf {doctorRequest.Cpf} não encontrado.");
+            
+
+             catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro ao buscar paciente.");
+                return StatusCode(500, "Erro interno no servidor");
+            }
 
         }
+
     }
 }
