@@ -31,16 +31,24 @@ header h1 {
   font-weight: 700;
 }
 
-header nav a {
+/* ===== Links e botões no header ===== */
+header nav a,
+header nav button {
+  background: none;
+  border: none;
   color: white;
   text-decoration: none;
   margin-left: 1.5rem;
   font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
   transition: opacity 0.2s ease-in-out;
 }
 
-header nav a:hover {
+header nav a:hover,
+header nav button:hover {
   opacity: 0.8;
+  color: #000000;
 }
 
 /* ===== Hero Section ===== */
@@ -124,8 +132,4 @@ footer {
   padding: 1rem;
   font-size: 0.9rem;
   border-top: 1px solid #b3daff;
-}
-
-html, body {
-  overflow-x: hidden;
 }

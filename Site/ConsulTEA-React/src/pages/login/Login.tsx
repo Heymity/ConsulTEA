@@ -39,7 +39,7 @@ const fakeLogin = async (cpf: string, password: string) => {
 };
 
 const apiLogin = async (cpf: string, password: string) => {
-    const res = await fetch("http://localhost:5015/doctor", {
+    const res = await fetch("http://localhost:5000/Doctor/post/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Cpf: cpf, Password: password }),
@@ -89,7 +89,7 @@ export default function Login(): JSX.Element {
             } else {
                 sessionStorage.setItem("auth_token", res.token);
             }
-            alert(`Welcome, ${res.token}!`);
+            // alert(`Welcome, ${res.token}!`);
             window.location.href = "/";
         } catch (err: any) {
             setError(err?.message ?? "Login failed");
@@ -102,9 +102,9 @@ export default function Login(): JSX.Element {
         <div className="login-page">
             <div className="login-container" role="main" aria-labelledby="login-heading">
                 <div id="login-heading" className="login-header">
-                    <div className="title">Sign in</div>
+                    <div className="title" style={{ fontSize: "2rem", fontWeight: "700" }}>Log in</div>
                     <div className="subtitle">
-                        Use <strong>1234</strong> / <strong>12345</strong> for demo
+                        Insira seu CPF e senha para acessar sua conta.
                     </div>
                 </div>
 
