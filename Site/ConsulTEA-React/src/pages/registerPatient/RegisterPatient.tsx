@@ -29,7 +29,7 @@ export default function RegisterPatient() {
         <div className="w-full max-w-[1400px] mx-auto flex justify-between items-center">
           <h1 className="text-3xl font-bold">TEA Data</h1>
           <nav className="flex space-x-8 text-lg font-semibold">
-            <a href="#" className="hover:underline">Início</a>
+            <a href="/home" className="hover:underline">Início</a>
             <a href="#" className="hover:underline">Pacientes</a>
             <a href="#" className="hover:underline">Sair</a>
           </nav>

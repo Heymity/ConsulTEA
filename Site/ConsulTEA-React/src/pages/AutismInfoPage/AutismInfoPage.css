@@ -1,0 +1,91 @@
+.autism-page {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #f5f9ff;
+  color: #1a1a1a;
+  line-height: 1.7;
+}
+
+/* ===== Índice ===== */
+.autism-nav {
+  position: sticky;
+  top: 0;
+  background-color: #0077cc;
+  padding: 1rem 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.autism-nav ul {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.autism-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.autism-nav a:hover {
+  opacity: 0.85;
+}
+
+/* ===== Conteúdo ===== */
+.autism-content {
+  max-width: 900px;
+  margin: 0 auto; /* remove margem superior/inferior que criava “gaps” */
+  padding: 2rem 1.5rem;
+  background-color: white; /* 👈 fundo único e contínuo */
+  border-radius: 8px; /* opcional, bordas suaves */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* opcional, leve sombra */
+  display: flex;
+  flex-direction: column;
+}
+
+.autism-content section {
+  margin-bottom: 0; /* 👈 remove o espaço entre as seções */
+  padding: 2rem 0; /* mantém espaçamento interno para respirar */
+}
+
+.autism-content section:last-child {
+  border-bottom: none;
+}
+
+.autism-content h2 {
+  color: #005fa3;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.autism-content p,
+.autism-content ul {
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+}
+
+.autism-content ul {
+  list-style: disc;
+  margin-left: 2rem;
+}
+
+.image-placeholder {
+  background-color: #e6f2ff;
+  border: 2px dashed #0077cc;
+  color: #0077cc;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  margin-top: 1rem;
+}
+
+/* ===== Rolagem suave ===== */
+html {
+  scroll-behavior: smooth;
+}
