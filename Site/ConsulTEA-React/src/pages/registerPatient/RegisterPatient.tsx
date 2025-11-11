@@ -3,24 +3,59 @@ import './RegisterPatient.css';
 import { useState } from 'react';
 
 export default function RegisterPatient() {
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: '',
     cpf: '',
     birth: '',
     contact: '',
     guardian: '',
     guardianContact: '',
+    createdAt: ''
   });
 
+ const [error, setError] = useState<string | null>(null);
+ const [loading, setLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
+    console.log(form);
     alert('Paciente registrado com sucesso! (mock)');
   };
+
+  const apiRegister = async (name: string, birthdate: string, cpf: string, contact: string, guardian: string, guardianContact: string) => {
+    const time = new Date();
+    const currentTime = time.toISOString();
+    const res = await fetch("https://localhost:52467/Patient/post/new", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ Name: name, Birthdate: birthdate, Cpf: cpf,Contact: contact, Guardian: guardian, GuardianContact: guardianContact, CreatedAt: currentTime }),
+    });
+    if (!res.ok) throw new Error("Register failed");
+    return res.json();
+};
+
+const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+         e.preventDefault(); /* 
+        setError(null);
+        const v = validate();
+        if (v) {
+            setError(v);
+            return;
+        } */
+        setLoading(true);
+        try {
+            const res = await apiRegister(form.name, form.birth, form.cpf.trim(), form.contact, form.guardian, form.guardianContact);
+        } catch (err: any) {
+            setError(err?.message ?? "register failed");
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-blue-50">
@@ -39,7 +74,7 @@ export default function RegisterPatient() {
       {/* Form Section */}
       <main className="flex-grow w-full flex justify-center py-16 px-4">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={onSubmit}
           className="bg-white shadow-lg rounded-xl p-10 w-full max-w-2xl"
         >
           <h2 className="text-4xl font-bold text-blue-700 mb-8 text-center">
@@ -66,10 +101,11 @@ export default function RegisterPatient() {
                 <input
                   type={field.type || 'text'}
                   name={field.name}
-                  value={(formData as any)[field.name]}
+                  value={(form as any)[field.name]}
                   onChange={handleChange}
                   required={field.name !== 'guardian' && field.name !== 'guartianContact'}
                   className="form-input"
+                   style={{ color: 'black' }}
                 />
               </div>
             ))}

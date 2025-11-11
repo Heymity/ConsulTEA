@@ -39,7 +39,7 @@ const fakeLogin = async (cpf: string, password: string) => {
 };
 
 const apiLogin = async (cpf: string, password: string) => {
-    const res = await fetch("http://localhost:5000/Doctor/post/login", {
+    const res = await fetch("https://localhost:52467/Doctor/post/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Cpf: cpf, Password: password }),
