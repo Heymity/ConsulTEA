@@ -37,14 +37,14 @@ export default function Home() {
               <a href="/login" className="hover:underline">Login</a>
             ) : (
               <>
-                <a href="/register-patient" className="hover:underline">
-                  Cadastro de Paciente
+                <a href="/see-patients" className="hover:underline">
+                  Ver Pacientes
                 </a>
 
                 {/* Mostra o botão de cadastrar médico apenas para admins */}
                 {userRole === "admin" && (
-                  <a href="/register-doctor" className="hover:underline">
-                    Cadastrar Médico
+                  <a href="/see-doctors" className="hover:underline">
+                    Ver Médicos
                   </a>
                 )}
 

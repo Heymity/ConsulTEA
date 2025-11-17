@@ -30,7 +30,7 @@ export default function RegisterDoctor() {
           <h1 className="text-3xl font-bold">ConsulTEA</h1>
           <nav className="flex space-x-8 text-lg font-semibold">
             <a href="/home" className="hover:underline">Início</a>
-            <a href="#" className="hover:underline">Pacientes</a>
+            <a href="/see-doctors" className="hover:underline">Ver Doutores</a>
             <a href="#" className="hover:underline">Sair</a>
           </nav>
         </div>

@@ -1,0 +1,39 @@
+/* Container dos cards */
+.doctor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Card de paciente — agora do tamanho do card de cadastro */
+.doctor-card {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #b3daff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease-in-out;
+}
+
+/* Efeito hover similar ao input/foco */
+.doctor-card:hover {
+  border-color: #0077cc;
+  box-shadow: 0 6px 18px rgba(0, 119, 204, 0.18);
+  transform: scale(1.01);
+}
+
+/* Título (nome) */
+.doctor-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #005fa3;
+  margin-bottom: 0.8rem;
+}
+
+/* Textos */
+.doctor-info {
+  font-size: 1rem;
+  color: #003d66;
+  margin-bottom: 0.2rem;
+}
