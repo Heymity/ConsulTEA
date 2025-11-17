@@ -1,10 +1,12 @@
 import React, { useState, type JSX } from "react";
 import "./Login.css";
+import {jwtDecode} from "jwt-decode";
 
 type LoginForm = {
     cpf: string;
     password: string;
     remember: boolean;
+    role: string;
 };
 
 const isValidCPF = (value: string) => {
@@ -39,19 +41,42 @@ const fakeLogin = async (cpf: string, password: string) => {
 };
 
 const apiLogin = async (cpf: string, password: string) => {
-    const res = await fetch("http://localhost:5000/Doctor/post/login", {
+  const endpoints = [
+    { url: "http://localhost:5000/Doctor/post/login", role: "doctor" },
+    { url: "http://localhost:5000/Admin/login", role: "admin" }
+  ];
+
+  for (const { url, role } of endpoints) {
+    try {
+      const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Cpf: cpf, Password: password }),
-    });
-    if (!res.ok) throw new Error("Login failed");
-    return res.json();
+      });
+
+      if (!res.ok) continue; // se falhar, tenta o próximo
+
+      const data = await res.json();
+      localStorage.setItem("auth_token", data.token);
+
+      const decoded: any = jwtDecode(data.token);
+      localStorage.setItem("user_role", decoded.role || role);
+
+      window.location.href = "/";
+      return;
+    } catch (err) {
+      console.error(`Falha ao tentar ${role}:`, err);
+    }
+  }
+
+  throw new Error("Login inválido para Admin e Médico");
 };
 
 export default function Login(): JSX.Element {
     const [form, setForm] = useState<LoginForm>({
         cpf: "",
         password: "",
+        role: "",
         remember: false,
     });
     const [loading, setLoading] = useState(false);
@@ -168,6 +193,22 @@ export default function Login(): JSX.Element {
                     <button type="submit" className="btn btn-primary" disabled={loading}>
                         {loading ? "Signing in..." : "Sign in"}
                     </button>
+
+                    <hr></hr>
+
+                    <div className="backButton">
+                        <button
+                            type="button"
+                            className="btn btn-secondary"
+                            onClick={() => {
+                                window.location.href = "/";
+                            }}
+                            disabled={loading}
+                        >
+                            Back to Home
+                        </button>
+                    </div>
+
                 </form>
             </div>
         </div>

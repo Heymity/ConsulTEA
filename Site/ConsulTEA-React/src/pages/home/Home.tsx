@@ -3,17 +3,23 @@ import "./Home.css";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     // Verifica se existe token no localStorage ou sessionStorage
     const token = localStorage.getItem("auth_token") || sessionStorage.getItem("auth_token");
+    const role = localStorage.getItem("user_role");
+
     if (token) setIsLoggedIn(true);
+    if (role) setUserRole(role);
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("auth_token");
     sessionStorage.removeItem("auth_token");
+    localStorage.removeItem("user_role");
     setIsLoggedIn(false);
+    setUserRole(null);
     window.location.href = "/login";
   };
 
@@ -22,20 +28,27 @@ export default function Home() {
       {/* Header */}
       <header className="bg-blue-600 text-white p-4 shadow-md">
         <div className="w-full flex justify-between items-center px-8">
-          <h1 className="text-2xl font-bold">TEA Data</h1>
+          <h1 className="text-2xl font-bold">ConsulTEA</h1>
           <nav className="space-x-4">
             <a href="/" className="hover:underline">Início</a>
             <a href="/autism-info" className="hover:underline">Dados</a>
-            <a href="/sobre" className="hover:underline">Sobre</a>
+
             {!isLoggedIn ? (
               <a href="/login" className="hover:underline">Login</a>
             ) : (
               <>
-                <a href="/register-patient" className="hover:underline">Cadastro de Paciente</a>
-                <button
-                  onClick={handleLogout}
-                  className="hover:underline"
-                >
+                <a href="/register-patient" className="hover:underline">
+                  Cadastro de Paciente
+                </a>
+
+                {/* Mostra o botão de cadastrar médico apenas para admins */}
+                {userRole === "admin" && (
+                  <a href="/register-doctor" className="hover:underline">
+                    Cadastrar Médico
+                  </a>
+                )}
+
+                <button onClick={handleLogout} className="hover:underline">
                   Sair
                 </button>
               </>
@@ -57,7 +70,7 @@ export default function Home() {
           o desenvolvimento de pessoas com TEA, unindo empatia e ciência.
         </p>
 
-        {!isLoggedIn ? (
+        {/* {!isLoggedIn ? (
           <a
             href="/login"
             className="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition"
@@ -71,7 +84,7 @@ export default function Home() {
           >
             Cadastrar novo paciente
           </a>
-        )}
+        )} */}
         </div>
       </main>
 

@@ -27,7 +27,7 @@ export default function RegisterDoctor() {
       {/* Header */}
       <header className="bg-blue-600 text-white p-6 shadow-md w-full">
         <div className="w-full max-w-[1400px] mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold">TEA Data</h1>
+          <h1 className="text-3xl font-bold">ConsulTEA</h1>
           <nav className="flex space-x-8 text-lg font-semibold">
             <a href="/home" className="hover:underline">Início</a>
             <a href="#" className="hover:underline">Pacientes</a>

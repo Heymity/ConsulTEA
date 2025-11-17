@@ -1,5 +1,6 @@
 import React from "react";
 import "./AutismInfoPage.css";
+import reactImage from "../../assets/images.jfif";
 
 const AutismInfoPage: React.FC = () => {
   return (
@@ -8,11 +9,10 @@ const AutismInfoPage: React.FC = () => {
       {/* ===== Índice de Navegação ===== */}
       <header className="bg-blue-600 text-white p-4 shadow-md">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">TEA Data</h1>
+          <h1 className="text-2xl font-bold">ConsulTEA</h1>
           <nav className="space-x-4">
             <a href="/" className="hover:underline">Início</a>
             <a href="/autism-info" className="hover:underline">Dados</a>
-            <a href="/sobre" className="hover:underline">Sobre</a>
           </nav>
         </div>
       </header>
@@ -43,7 +43,9 @@ const AutismInfoPage: React.FC = () => {
             permitem que a pessoa com TEA desenvolva suas habilidades e tenha
             melhor qualidade de vida.
           </p>
-          <div className="image-placeholder">[Espaço para imagem ilustrativa]</div>
+          <div className="image-placeholder">
+            <img src={reactImage} alt="Descrição da imagem" />
+          </div>
         </section>
 
         <section id="signs">
