@@ -2,6 +2,7 @@
 import Header from '../../components/header/Header';
 import './SeePatients.css';
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 interface Anamnese {
   id: number;
@@ -64,8 +65,10 @@ export default function SeePatients() {
     setExpandedPatient(prev => prev === id ? null : id);
   };
 
+  const navigate = useNavigate();
+
   const handleAddAnamnese = (id: number) => {
-    window.location.href = `/add-appointment/${id}`;
+    navigate("/add-appointment", { state: { patientId: id } });
   };
 
   return (

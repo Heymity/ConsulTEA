@@ -1,11 +1,14 @@
 // AddAppointment.tsx
 import './AddAppointment.css';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import Header from '../../components/header/Header';
+import { useLocation } from "react-router-dom";
 
 export default function AddAppointment() {
-  const { patientId } = useParams();
+  const location = useLocation();
+  const patientId = location.state?.patientId;
+
+  console.log("ID do paciente:", patientId);
 
   const [formData, setFormData] = useState({
     date: '',
@@ -23,13 +26,53 @@ export default function AddAppointment() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({
-      patientId,
-      ...formData
-    });
-    alert('Anamnese registrada com sucesso! (mock)');
+
+    try {
+      const token = localStorage.getItem("auth_token");
+
+      if (!token) {
+        alert("Você não está autenticado!");
+        return;
+      }
+
+      const payload = {
+        IdPatient: patientId,
+        Date: formData.date,
+        MainComplaint: formData.main_complaint,
+        BehaviorObservation: formData.behavior_observation,
+        CommunicationNotes: formData.communication_notes,
+        SensoryNotes: formData.sensory_notes,
+        SocialInteraction: formData.social_interaction,
+        MedicationInUse: formData.medication_in_use,
+        EvolutionSummary: formData.evolution_summary,
+        NextSteps: formData.next_steps
+      };
+      
+      console.log("Enviando payload:", payload);
+
+      const res = await fetch("http://localhost:5000/Appointment/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Erro no cadastro");
+      }
+
+      alert("Anamnese registrada com sucesso!");
+      window.location.href = "/see-patients";
+
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao registrar anamnese.");
+    }
   };
 
   return (
