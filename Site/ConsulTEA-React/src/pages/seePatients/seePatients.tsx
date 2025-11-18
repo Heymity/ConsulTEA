@@ -24,41 +24,60 @@ export default function SeePatients() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [expandedPatient, setExpandedPatient] = useState<number | null>(null);
+  const [patientsOriginal, setPatientsOriginal] = useState<Patient[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchType, setSearchType] = useState<'name' | 'cpf'>('name');
+
 
   useEffect(() => {
-    async function fetchPatients() {
-      try {
-        setLoading(true);
+  async function fetchPatients() {
+    try {
+      setLoading(true);
 
-        // Mock data incl. anamneses
-        const mockData: Patient[] = [
-          { 
-            id: 1, name: "Jicardo Ribeiro", cpf: "123.456.789-00", birth: "2015-03-10",
-            contact_phone: "11 999232455", guardian_name: "", guardian_contact: "",
-            anamneses: [
-              { id: 1, date: "2024-01-15" },
-              { id: 2, date: "2024-06-02" }
-            ]
-          },
-          { 
-            id: 2, name: "Sujiro Nakamura", cpf: "987.654.321-00", birth: "2018-07-22",
-            contact_phone: "", guardian_name: "Lucas Sposo", guardian_contact: "11 997695543",
-            anamneses: [
-              { id: 1, date: "2024-03-09" }
-            ]
-          }
-        ];
+      const token = localStorage.getItem("auth_token"); // ou onde você salvou
+      const url = "http://localhost:5000/Patient/get/Doctor";
 
-        setPatients(mockData);
-      } catch (err) {
-        setError('Erro ao carregar pacientes.');
-      } finally {
-        setLoading(false);
+
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!res.ok) {
+        throw new Error("Erro ao buscar pacientes");
       }
-    }
 
-    fetchPatients();
-  }, []);
+      const data = await res.json();
+
+      // MAPEAMENTO dos nomes enviados pelo backend → nomes usados no front, pq eu postei cringe
+      const mappedPatients: Patient[] = data.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        cpf: p.cpf,
+        birth: p.birthDate,              // ajustado
+        contact_phone: p.contactPhone,   // ajustado
+        guardian_name: p.guardianName,   // ajustado
+        guardian_contact: p.guardianContact, // ajustado
+        anamneses: [] // virá vazio até integrarmos o backend de anamneses
+      }));
+
+      setPatients(mappedPatients);
+      setPatientsOriginal(mappedPatients);
+
+    } catch (err) {
+      setError("Erro ao carregar pacientes.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  fetchPatients();
+}, []);
+
 
   const toggleExpand = (id: number) => {
     setExpandedPatient(prev => prev === id ? null : id);
@@ -67,6 +86,23 @@ export default function SeePatients() {
   const handleAddAnamnese = (id: number) => {
     window.location.href = `/add-appointment/${id}`;
   };
+
+  function applyFilter(term: string, type: 'name' | 'cpf') {
+  if (!term.trim()) {
+    setPatients(patientsOriginal);
+    return;
+  }
+
+  const lower = term.toLowerCase();
+
+  const filtered = patientsOriginal.filter(p =>
+    type === 'name'
+      ? p.name.toLowerCase().includes(lower)
+      : p.cpf.toLowerCase().includes(lower)
+  );
+
+  setPatients(filtered);
+}
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-blue-50">
@@ -80,6 +116,40 @@ export default function SeePatients() {
           <h2 className="text-4xl font-bold text-blue-700 mb-8 text-center">
             Pacientes
           </h2>
+
+        <div className="patient-search">
+          <input
+            type="text"
+            className="search-input"
+            placeholder={`Buscar por ${searchType === 'name' ? 'nome' : 'CPF'}...`}
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              applyFilter(e.target.value, searchType);
+            }}
+          />
+
+          <select
+            className="search-select"
+            value={searchType}
+            onChange={(e) => {
+              const type = e.target.value as 'name' | 'cpf';
+              setSearchType(type);
+              applyFilter(searchTerm, type);
+            }}
+          >
+            <option value="name">Nome</option>
+            <option value="cpf">CPF</option>
+          </select>
+
+          <button
+            className="search-button"
+            onClick={() => applyFilter(searchTerm, searchType)}
+          >
+            Buscar
+          </button>
+        </div>
+
 
           {loading && <p className="loading-text">Carregando pacientes...</p>}
           {error && <p className="error-text">{error}</p>}
