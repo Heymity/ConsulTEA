@@ -39,7 +39,11 @@ const fakeLogin = async (cpf: string, password: string) => {
 };
 
 const apiLogin = async (cpf: string, password: string) => {
+<<<<<<< HEAD
     const res = await fetch("https://localhost:52467/Doctor/post/login", {
+=======
+    const res = await fetch("https://localhost:52649/Doctor/post/login", { //mudar pra 5000 se der problem
+>>>>>>> 51452479fbc6ae6d700b7f196391079e7d175295
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Cpf: cpf, Password: password }),
