@@ -47,6 +47,7 @@
   gap: 10px;
   margin-bottom: 20px;
   width: 100%;
+  color: #005fa3;
 }
 
 .search-input {
@@ -56,6 +57,8 @@
   border-radius: 10px;
   font-size: 1rem;
   outline: none;
+  background-color:#ffffff;
+  color: #005fa3; 
 }
 
 .search-select {
@@ -64,6 +67,7 @@
   border-radius: 10px;
   background: white;
   font-size: 1rem;
+  color: #005fa3;
   cursor: pointer;
 }
 

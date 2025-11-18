@@ -101,7 +101,7 @@ export default function SeePatients() {
   const filtered = patientsOriginal.filter(p =>
     type === 'name'
       ? p.name.toLowerCase().includes(lower)
-      : p.cpf.toLowerCase().includes(lower)
+      : p.cpf.toLowerCase().startsWith(lower)
   );
 
   setPatients(filtered);
@@ -128,7 +128,6 @@ export default function SeePatients() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              applyFilter(e.target.value, searchType);
             }}
           />
 
@@ -138,7 +137,6 @@ export default function SeePatients() {
             onChange={(e) => {
               const type = e.target.value as 'name' | 'cpf';
               setSearchType(type);
-              applyFilter(searchTerm, type);
             }}
           >
             <option value="name">Nome</option>
