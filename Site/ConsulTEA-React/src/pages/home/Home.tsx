@@ -1,48 +1,12 @@
-import { useEffect, useState } from "react";
 import "./Home.css";
+import Header from "../../components/header/Header";
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    // Verifica se existe token no localStorage ou sessionStorage
-    const token = localStorage.getItem("auth_token") || sessionStorage.getItem("auth_token");
-    if (token) setIsLoggedIn(true);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth_token");
-    sessionStorage.removeItem("auth_token");
-    setIsLoggedIn(false);
-    window.location.href = "/login";
-  };
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 text-gray-800">
       {/* Header */}
-      <header className="bg-blue-600 text-white p-4 shadow-md">
-        <div className="w-full flex justify-between items-center px-8">
-          <h1 className="text-2xl font-bold">TEA Data</h1>
-          <nav className="space-x-4">
-            <a href="/" className="hover:underline">Início</a>
-            <a href="/autism-info" className="hover:underline">Dados</a>
-            <a href="/sobre" className="hover:underline">Sobre</a>
-            {!isLoggedIn ? (
-              <a href="/login" className="hover:underline">Login</a>
-            ) : (
-              <>
-                <a href="/register-patient" className="hover:underline">Cadastro de Paciente</a>
-                <button
-                  onClick={handleLogout}
-                  className="hover:underline"
-                >
-                  Sair
-                </button>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+      <Header/>
 
       {/* Hero Section */}
       <main className="flex-grow w-full px-4 py-16 text-center">
@@ -57,7 +21,7 @@ export default function Home() {
           o desenvolvimento de pessoas com TEA, unindo empatia e ciência.
         </p>
 
-        {!isLoggedIn ? (
+        {/* {!isLoggedIn ? (
           <a
             href="/login"
             className="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition"
@@ -71,7 +35,7 @@ export default function Home() {
           >
             Cadastrar novo paciente
           </a>
-        )}
+        )} */}
         </div>
       </main>
 

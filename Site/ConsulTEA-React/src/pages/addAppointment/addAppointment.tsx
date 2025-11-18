@@ -2,6 +2,7 @@
 import './AddAppointment.css';
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Header from '../../components/header/Header';
 
 export default function AddAppointment() {
   const { patientId } = useParams();
@@ -34,16 +35,7 @@ export default function AddAppointment() {
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-blue-50">
       {/* Header */}
-      <header className="bg-blue-600 text-white p-6 shadow-md w-full">
-        <div className="w-full max-w-[1400px] mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold">TEA Data</h1>
-          <nav className="flex space-x-8 text-lg font-semibold">
-            <a href="/home" className="hover:underline">Início</a>
-            <a href="/see-patients" className="hover:underline">Pacientes</a>
-            <a href="#" className="hover:underline">Sair</a>
-          </nav>
-        </div>
-      </header>
+      <Header/>
 
       {/* Form */}
       <main className="flex-grow w-full flex justify-center py-16 px-4">

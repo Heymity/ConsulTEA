@@ -1,4 +1,6 @@
 // RegisterPatient.tsx (refactored)
+import { Link } from 'react-router-dom';
+import Header from '../../components/header/Header';
 import './RegisterPatient.css';
 import { useState } from 'react';
 
@@ -9,8 +11,7 @@ export default function RegisterPatient() {
     birth: '',
     contact: '',
     guardian: '',
-    guardianContact: '',
-    createdAt: ''
+    guardianContact: ''
   });
 
  const [error, setError] = useState<string | null>(null);
@@ -27,15 +28,19 @@ export default function RegisterPatient() {
   };
 
   const apiRegister = async (name: string, birthdate: string, cpf: string, contact: string, guardian: string, guardianContact: string) => {
-    const time = new Date();
-    const currentTime = time.toISOString();
-    const res = await fetch("https://localhost:52467/Patient/post/new", {
+    //const time = new Date();
+    //const currentTime = time.toISOString();
+    const token = localStorage.getItem("auth_token");
+    try {const res = await fetch("https://localhost:52467/Patient/new", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ Name: name, Birthdate: birthdate, Cpf: cpf,Contact: contact, Guardian: guardian, GuardianContact: guardianContact, CreatedAt: currentTime }),
+        headers: { "Authorization": `Bearer ${token}`, 
+          "Content-Type": "application/json" },
+        body: JSON.stringify({ Name: name, Birthdate: birthdate, Cpf: cpf,ContactPhone: contact, GuardianName: guardian, GuardianContact: guardianContact}),
     });
     if (!res.ok) throw new Error("Register failed");
-    return res.json();
+    return res.json();}
+    finally {setLoading(false)}
+    
 };
 
 const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -48,7 +53,9 @@ const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         } */
         setLoading(true);
         try {
-            const res = await apiRegister(form.name, form.birth, form.cpf.trim(), form.contact, form.guardian, form.guardianContact);
+            const result = await apiRegister(form.name, form.birth, form.cpf.trim(), form.contact, form.guardian, form.guardianContact);
+             window.location.href = "/see-patients";
+            console.log('Registration successful:', result);
         } catch (err: any) {
             setError(err?.message ?? "register failed");
         } finally {
@@ -57,24 +64,17 @@ const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     };
 
 
+          console.log("🚀 ~ RegisterPatient ~ onSubmit:", onSubmit)
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-blue-50">
       {/* Header */}
-      <header className="bg-blue-600 text-white p-6 shadow-md w-full">
-        <div className="w-full max-w-[1400px] mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold">TEA Data</h1>
-          <nav className="flex space-x-8 text-lg font-semibold">
-            <a href="/home" className="hover:underline">Início</a>
-            <a href="#" className="hover:underline">Pacientes</a>
-            <a href="#" className="hover:underline">Sair</a>
-          </nav>
-        </div>
-      </header>
+      <Header/>
 
       {/* Form Section */}
       <main className="flex-grow w-full flex justify-center py-16 px-4">
         <form
           onSubmit={onSubmit}
+          
           className="bg-white shadow-lg rounded-xl p-10 w-full max-w-2xl"
         >
           <h2 className="text-4xl font-bold text-blue-700 mb-8 text-center">
