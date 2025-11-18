@@ -7,7 +7,7 @@ import RegisterDoctor from './pages/registerDoctor/registerDoctor';
 import AutismInfoPage from './pages/AutismInfoPage/AutismInfoPage';
 import SeePatients from './pages/seePatients/seePatients';
 import SeeDoctors from './pages/seeDoctor/seeDoctor';
-import AddAppointment from './pages/addAppointment/addApointment';
+import AddAppointment from './pages/addAppointment/addAppointment';
 
 
 function App() {

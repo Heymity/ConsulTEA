@@ -1,21 +1,14 @@
 import React from "react";
 import "./AutismInfoPage.css";
 import reactImage from "../../assets/images.jfif";
+import Header from "../../components/header/Header";
 
 const AutismInfoPage: React.FC = () => {
   return (
     <div className="autism-page">
         
       {/* ===== Índice de Navegação ===== */}
-      <header className="bg-blue-600 text-white p-4 shadow-md">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">ConsulTEA</h1>
-          <nav className="space-x-4">
-            <a href="/" className="hover:underline">Início</a>
-            <a href="/autism-info" className="hover:underline">Dados</a>
-          </nav>
-        </div>
-      </header>
+      <Header/>
 
       <nav className="autism-nav">
         <ul>

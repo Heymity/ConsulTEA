@@ -1,61 +1,12 @@
-import { useEffect, useState } from "react";
 import "./Home.css";
+import Header from "../../components/header/Header";
 
 export default function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Verifica se existe token no localStorage ou sessionStorage
-    const token = localStorage.getItem("auth_token") || sessionStorage.getItem("auth_token");
-    const role = localStorage.getItem("user_role");
-
-    if (token) setIsLoggedIn(true);
-    if (role) setUserRole(role);
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth_token");
-    sessionStorage.removeItem("auth_token");
-    localStorage.removeItem("user_role");
-    setIsLoggedIn(false);
-    setUserRole(null);
-    window.location.href = "/login";
-  };
 
   return (
     <div className="min-h-screen flex flex-col font-sans bg-gray-50 text-gray-800">
       {/* Header */}
-      <header className="bg-blue-600 text-white p-4 shadow-md">
-        <div className="w-full flex justify-between items-center px-8">
-          <h1 className="text-2xl font-bold">ConsulTEA</h1>
-          <nav className="space-x-4">
-            <a href="/" className="hover:underline">Início</a>
-            <a href="/autism-info" className="hover:underline">Dados</a>
-
-            {!isLoggedIn ? (
-              <a href="/login" className="hover:underline">Login</a>
-            ) : (
-              <>
-                <a href="/see-patients" className="hover:underline">
-                  Ver Pacientes
-                </a>
-
-                {/* Mostra o botão de cadastrar médico apenas para admins */}
-                {userRole === "admin" && (
-                  <a href="/see-doctors" className="hover:underline">
-                    Ver Médicos
-                  </a>
-                )}
-
-                <button onClick={handleLogout} className="hover:underline">
-                  Sair
-                </button>
-              </>
-            )}
-          </nav>
-        </div>
-      </header>
+      <Header/>
 
       {/* Hero Section */}
       <main className="flex-grow w-full px-4 py-16 text-center">
