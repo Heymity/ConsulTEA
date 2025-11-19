@@ -9,5 +9,5 @@ public class PostSection
     public string ImageUri { get; set; } = string.Empty;
     public int GraphType { get; set; } 
     public int SectionOrder { get; set; }
-    public Dictionary<string, List<double>> DataSeries { get; set; } = new();
+    public Dictionary<string, List<string>> DataSeries { get; set; } = new();
 }
