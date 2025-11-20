@@ -50,6 +50,7 @@ public class DoctorController : ControllerBase
 
 
     }
+    
     [HttpPost("post/register")]
     [Authorize("Admin")]
     public async Task<IActionResult> Register(DoctorRegisterRequest doctorRequest)
@@ -76,20 +77,58 @@ public class DoctorController : ControllerBase
             insertCmd.Parameters.AddWithValue("password", BCrypt.Net.BCrypt.HashPassword(doctorRequest.Password, workFactor: 12));
 
             var result = await insertCmd.ExecuteNonQueryAsync();
-
-
-            if (result > 0)
-                return Ok("Medico adicionado com sucesso");
-            else
-                return NotFound("opsie daisy");
-
+            
+            return result > 0 ? Ok("Medico adicionado com sucesso") : NotFound("opsie daisy");
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Erro ao buscar paciente.");
             return StatusCode(500, "Erro interno no servidor");
         }
-
     }
 
+    [HttpGet("list")]
+    [Authorize("Admin")]
+    public async Task<IActionResult> ListDoctors()
+    {
+        _logger.Log(LogLevel.Information, "Doctors List");
+
+        try
+        {
+            const string query = "SELECT * FROM bd_doctor_identification";
+
+            await using var conn = await _dbService.GetConnection();
+            await using var cmd = new NpgsqlCommand(query, conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            var doctors = new List<Doctor>();
+
+            while (await reader.ReadAsync())
+            {
+                doctors.Add(ReadDoctor(reader));
+            }
+
+            return Ok(doctors);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Erro ao buscar paciente.");
+            return StatusCode(500, "Erro interno no servidor");
+        }
+    }
+
+    private static Doctor ReadDoctor(NpgsqlDataReader reader)
+    {
+        return new Doctor()
+        {   
+            Cpf = reader.GetString(reader.GetOrdinal("cpf")),
+            CreatedAt = reader.GetDateTime(reader.GetOrdinal("created_at")),
+            Crm = reader.GetString(reader.GetOrdinal("crm")),
+            Email = reader.GetString(reader.GetOrdinal("email")),
+            Name = reader.GetString(reader.GetOrdinal("name")),
+            Specialty = reader.GetString(reader.GetOrdinal("specialty")),
+            Id = reader.GetInt32(reader.GetOrdinal("id")),
+        };
+    }
+    
 }

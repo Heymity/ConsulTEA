@@ -8,7 +8,7 @@ interface Doctor {
   name: string;
   cpf: string;
   crm: string;
-  speciality: string;    // this may cause trouble because the collumn on the DB is "specialty"
+  specialty: string;
   email: string;
 }
 
@@ -26,10 +26,10 @@ export default function SeeDoctor() {
         // Mock data incl. anamneses
         const mockData: Doctor[] = [
           { 
-            id: 1, name: "Jicardo Ribeiro", cpf: "123.456.789-00", crm: "111", speciality: "Pediatra", email: "bruh@gmail.com"
+            id: 1, name: "Jicardo Ribeiro", cpf: "123.456.789-00", crm: "111", specialty: "Pediatra", email: "bruh@gmail.com"
           },
         { 
-            id: 2, name: "Roberto Carlos", cpf: "333.456.744-10", crm: "420", speciality: "Cantor", email: "teste@gmail.com"
+            id: 2, name: "Roberto Carlos", cpf: "333.456.744-10", crm: "420", specialty: "Cantor", email: "teste@gmail.com"
           }
         ];
         setDoctors(mockData);
@@ -82,7 +82,7 @@ export default function SeeDoctor() {
                   <div className="doctor-dropdown">
 
                     {/** Dados extras */}
-                    <p className="doctor-info"><strong>Especialidade:</strong> {p.speciality}</p>
+                    <p className="doctor-info"><strong>Especialidade:</strong> {p.specialty}</p>
                     <p className="doctor-info"><strong>Email:</strong> {p.email}</p>
                   </div>
                 )}

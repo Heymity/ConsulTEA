@@ -28,22 +28,22 @@ const isValidCPF = (value: string) => {
     return rev === digits[10];
 };
 
-const fakeLogin = async (cpf: string, password: string) => {
-    await new Promise((res) => setTimeout(res, 900));
-    // demo credentials: CPF 12345678909 and password "password"
-    if (cpf.replace(/\D/g, "") === "12345678909" && password === "password") {
-        return {
-            token: "fake-jwt-token-123",
-            user: { name: "Demo User", cpf },
-        };
-    }
-    throw new Error("Invalid credentials");
-};
+// const fakeLogin = async (cpf: string, password: string) => {
+//     await new Promise((res) => setTimeout(res, 900));
+//     // demo credentials: CPF 12345678909 and password "password"
+//     if (cpf.replace(/\D/g, "") === "12345678909" && password === "password") {
+//         return {
+//             token: "fake-jwt-token-123",
+//             user: { name: "Demo User", cpf },
+//         };
+//     }
+//     throw new Error("Invalid credentials");
+// };
 
 const apiLogin = async (cpf: string, password: string) => {
   const endpoints = [
-    { url: "http://localhost:5000/Doctor/post/login", role: "doctor" },
-    { url: "http://localhost:5000/Admin/login", role: "admin" }
+    { url: "https://localhost:52467/Doctor/post/login", role: "doctor" },
+    { url: "https://localhost:52467/Admin/login", role: "admin" }
   ];
 
   for (const { url, role } of endpoints) {
