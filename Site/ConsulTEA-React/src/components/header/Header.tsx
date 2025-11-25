@@ -114,7 +114,7 @@ export default function Header() {
 
                 <nav className="space-x-4">
                     <a href="/" className="hover:underline">Início</a>
-                    <a href="/register-patient" className="hover:underline">Cadastrar Médico</a>
+                    <a href="/register-doctor" className="hover:underline">Cadastrar Médico</a>
                     {!isLoggedIn ? (
                         <a href="/login" className="hover:underline">Login</a>
                     ) : (

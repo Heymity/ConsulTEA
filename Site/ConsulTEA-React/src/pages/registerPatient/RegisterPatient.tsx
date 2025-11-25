@@ -1,5 +1,4 @@
 // RegisterPatient.tsx (refactored)
-import { Link } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import './RegisterPatient.css';
 import { useState } from 'react';
@@ -21,15 +20,7 @@ export default function RegisterPatient() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(form);
-    alert('Paciente registrado com sucesso! (mock)');
-  };
-
   const apiRegister = async (name: string, birthdate: string, cpf: string, contact: string, guardian: string, guardianContact: string) => {
-    //const time = new Date();
-    //const currentTime = time.toISOString();
     const token = localStorage.getItem("auth_token");
     try {const res = await fetch("https://localhost:52467/Patient/new", {
         method: "POST",
@@ -44,27 +35,20 @@ export default function RegisterPatient() {
 };
 
 const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-         e.preventDefault(); /* 
-        setError(null);
-        const v = validate();
-        if (v) {
-            setError(v);
-            return;
-        } */
+         e.preventDefault(); 
         setLoading(true);
         try {
             const result = await apiRegister(form.name, form.birth, form.cpf.trim(), form.contact, form.guardian, form.guardianContact);
-             window.location.href = "/see-patients";
             console.log('Registration successful:', result);
         } catch (err: any) {
             setError(err?.message ?? "register failed");
+            console.log('Registration failed', error)
         } finally {
             setLoading(false);
+            window.location.href = "/see-patients";
         }
     };
 
-
-          console.log("🚀 ~ RegisterPatient ~ onSubmit:", onSubmit)
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-blue-50">
       {/* Header */}
@@ -106,6 +90,7 @@ const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   required={field.name !== 'guardian' && field.name !== 'guartianContact'}
                   className="form-input"
                    style={{ color: 'black' }}
+                  disabled={loading}
                 />
               </div>
             ))}
