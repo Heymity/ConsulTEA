@@ -1,9 +1,17 @@
 import { LineChart, Line, BarChart, Bar, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
-export default function GraphRenderer({ type, dataSeries }) {
+type GraphRendererProps = {
+  type: number; // 0: Line, 1: Bar, 2: Scatter
+  dataSeries: {
+    x: Number[] | string[];
+    y: Number[];
+  };
+};
+
+export default function GraphRenderer({ type, dataSeries }: GraphRendererProps) {
   if (!dataSeries || !dataSeries.x || !dataSeries.y) return null;
 
-  const xArr = dataSeries.x.map(Number);
+  const xArr = dataSeries.x;
   const yArr = dataSeries.y.map(Number);
 
   const chartData = xArr.map((x, i) => ({

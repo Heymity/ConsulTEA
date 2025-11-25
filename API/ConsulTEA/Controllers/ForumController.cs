@@ -131,14 +131,14 @@ public class ForumController(ILogger<ForumController> logger, DataAccessLayer db
                     foreach (var (key, value) in sec.DataSeries) 
                     {
                         const string seriesQuery =
-                            "INSERT INTO bd_forum_data_series (id_forum_section, json_file, data_path, series_pathname) VALUES (@idSection, @json, @dataPath, @seriesKey)";
+                            "INSERT INTO bd_forum_data_series (id_forum_section, json_file, label, series_pathname) VALUES (@idSection, @json, @dataPath, @seriesKey)";
                         
                         var json = JsonSerializer.Serialize(value, _seriesJsonOptions);
                         
                         await using var cmdSeries = new NpgsqlCommand(seriesQuery, conn, transaction);
                         cmdSeries.Parameters.AddWithValue("idSection", secId);
                         cmdSeries.Parameters.AddWithValue("json", json);
-                        cmdSeries.Parameters.AddWithValue("dataPath", "NOT USED");
+                        cmdSeries.Parameters.AddWithValue("dataPath", "");
                         cmdSeries.Parameters.AddWithValue("seriesKey", key);
                         
                         await cmdSeries.ExecuteNonQueryAsync();
@@ -174,7 +174,7 @@ public class ForumController(ILogger<ForumController> logger, DataAccessLayer db
             await using var conn = await dbService.GetConnection();
             
             const string query = """
-                                 SELECT post.id AS post_id, title, section.id AS section_id, id_forum_post, type, text, image_uri, graph_type, section_order, series.id AS series_id, id_forum_section, json_file, data_path, series_pathname
+                                 SELECT post.id AS post_id, title, section.id AS section_id, id_forum_post, type, text, image_uri, graph_type, section_order, series.id AS series_id, id_forum_section, json_file, label, series_pathname
                                  FROM ((bd_forum_post AS post
                                  FULL JOIN bd_forum_section AS section
                                  ON post.id = section.id_forum_post) 

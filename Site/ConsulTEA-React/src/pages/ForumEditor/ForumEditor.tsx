@@ -190,8 +190,9 @@ export default function ForumEditor() {
     const selectedRows = selectedRowIndices.map(i => rows[i] ?? []);
 
     const dataSeries: DataSeries = {};
-    dataSeries[xHeader] = selectedRows.map(r => (r[xIndex] ?? "").toString());
-    dataSeries[yHeader] = selectedRows.map(r => (r[yIndex] ?? "").toString());
+    // Use fixed keys 'x' and 'y' instead of header names
+    dataSeries["x"] = selectedRows.map(r => (r[xIndex] ?? "").toString());
+    dataSeries["y"] = selectedRows.map(r => (r[yIndex] ?? "").toString());
 
     updateSection(index, "dataSeries", dataSeries);
     alert("Série(s) de dados aplicadas à seção");
