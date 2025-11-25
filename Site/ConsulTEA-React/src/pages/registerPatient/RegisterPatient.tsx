@@ -22,7 +22,7 @@ export default function RegisterPatient() {
 
   const apiRegister = async (name: string, birthdate: string, cpf: string, contact: string, guardian: string, guardianContact: string) => {
     const token = localStorage.getItem("auth_token");
-    try {const res = await fetch("https://localhost:52467/Patient/new", {
+    try {const res = await fetch("http://localhost:5000/Patient/new", {
         method: "POST",
         headers: { "Authorization": `Bearer ${token}`, 
           "Content-Type": "application/json" },

@@ -28,6 +28,36 @@ export default function Header() {
 
                 <nav className="space-x-4">
                     <a href="/" className="hover:underline">Início</a>
+                {userRole === "admin" && (
+                    <>
+                    <a href="/upload-data" className="hover:underline">
+                        Enviar dados
+                    </a>
+                    <a href="/forum-edit" className="hover:underline">
+                        Adicionar Seções
+                    </a>
+                    </>
+                )}
+                </nav>
+            </div>
+        </header>
+        );
+    }
+
+    if (location.pathname === "/teste") {
+        return (
+        <header className="bg-blue-600 text-white p-4 shadow-md">
+            <div className="w-full flex justify-between items-center px-8">
+                <h1 className="text-2xl font-bold">ConsulTEA</h1>
+
+                <nav className="space-x-4">
+                    <a href="/" className="hover:underline">Início</a>
+                {userRole === "admin" && (
+
+                    <a href="/upload-data" className="hover:underline">
+                        Enviar dados
+                    </a>
+                )}
                 </nav>
             </div>
         </header>

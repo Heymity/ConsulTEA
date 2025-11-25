@@ -8,6 +8,8 @@ import AutismInfoPage from './pages/AutismInfoPage/AutismInfoPage';
 import SeePatients from './pages/seePatients/seePatients';
 import SeeDoctors from './pages/seeDoctor/seeDoctor';
 import AddAppointment from './pages/addAppointment/addAppointment';
+import UploadData from './pages/uploadData/uploadData';
+import ForumEditor from './pages/ForumEditor/ForumEditor';
 
 
 function App() {
@@ -23,6 +25,8 @@ function App() {
         <Route path="/see-patients" element={<SeePatients />} />
         <Route path="/see-doctors" element={<SeeDoctors />} />
         <Route path="/add-appointment" element={<AddAppointment />} />
+        <Route path="/upload-data" element={<UploadData />} />
+        <Route path="/forum-edit" element={<ForumEditor />} />
         <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </BrowserRouter>

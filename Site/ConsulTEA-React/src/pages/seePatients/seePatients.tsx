@@ -2,6 +2,7 @@
 import Header from '../../components/header/Header';
 import './SeePatients.css';
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 interface Anamnese {
   id: number;
@@ -83,8 +84,10 @@ export default function SeePatients() {
     setExpandedPatient(prev => prev === id ? null : id);
   };
 
+  const navigate = useNavigate();
+
   const handleAddAnamnese = (id: number) => {
-    window.location.href = `/add-appointment/${id}`;
+    navigate("/add-appointment", { state: { patientId: id } });
   };
 
   function applyFilter(term: string, type: 'name' | 'cpf') {
@@ -98,7 +101,7 @@ export default function SeePatients() {
   const filtered = patientsOriginal.filter(p =>
     type === 'name'
       ? p.name.toLowerCase().includes(lower)
-      : p.cpf.toLowerCase().includes(lower)
+      : p.cpf.toLowerCase().startsWith(lower)
   );
 
   setPatients(filtered);
@@ -125,7 +128,6 @@ export default function SeePatients() {
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
-              applyFilter(e.target.value, searchType);
             }}
           />
 
@@ -135,7 +137,6 @@ export default function SeePatients() {
             onChange={(e) => {
               const type = e.target.value as 'name' | 'cpf';
               setSearchType(type);
-              applyFilter(searchTerm, type);
             }}
           >
             <option value="name">Nome</option>
