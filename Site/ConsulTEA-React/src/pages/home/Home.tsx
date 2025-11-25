@@ -18,7 +18,7 @@ export default function Home() {
 
         <p className="text-lg mb-8">
           Uma plataforma para profissionais registrarem anamneses e acompanharem
-          o desenvolvimento de pessoas com TEA, unindo empatia e ciência.
+          o desenvolvimento de pessoas com TEA, unindo empatia e tecnologia.
         </p>
 
         {/* {!isLoggedIn ? (
@@ -58,7 +58,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-gray-200 text-center py-4 text-sm text-gray-600">
-        © 2025 Projeto TEA Data — Ainda em Desenvolvimento
+        © 2025 Projeto TEA Data
       </footer>
     </div>
   );

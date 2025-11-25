@@ -42,8 +42,8 @@ const isValidCPF = (value: string) => {
 
 const apiLogin = async (cpf: string, password: string) => {
   const endpoints = [
-    { url: "https://localhost:52467/Doctor/post/login", role: "doctor" },
-    { url: "https://localhost:52467/Admin/login", role: "admin" }
+    { url: "http://localhost:5000/Doctor/post/login", role: "doctor" },
+    { url: "http://localhost:5000/Admin/login", role: "admin" }
   ];
 
   for (const { url, role } of endpoints) {

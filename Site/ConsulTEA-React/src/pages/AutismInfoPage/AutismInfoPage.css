@@ -101,3 +101,8 @@
 html {
   scroll-behavior: smooth;
 }
+
+
+.titulo-dados {
+  align-self: center;
+}
