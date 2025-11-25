@@ -1,12 +1,13 @@
-/* Container dos cards */
 .doctor-list {
+  list-style: none;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
-/* Card de paciente — agora do tamanho do card de cadastro */
 .doctor-card {
+  flex: 1 1 calc(25% - 2rem);
   width: 100%;
   background-color: #ffffff;
   border: 1px solid #b3daff;
@@ -16,14 +17,12 @@
   transition: all 0.25s ease-in-out;
 }
 
-/* Efeito hover similar ao input/foco */
 .doctor-card:hover {
   border-color: #0077cc;
   box-shadow: 0 6px 18px rgba(0, 119, 204, 0.18);
   transform: scale(1.01);
 }
 
-/* Título (nome) */
 .doctor-name {
   font-size: 1.5rem;
   font-weight: 700;
@@ -31,9 +30,53 @@
   margin-bottom: 0.8rem;
 }
 
-/* Textos */
 .doctor-info {
   font-size: 1rem;
   color: #003d66;
   margin-bottom: 0.2rem;
+}
+
+/* Search bar */
+.doctor-search {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  color: #005fa3;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid #a8c8ff;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  background-color:#ffffff;
+  color: #005fa3; 
+}
+
+.search-select {
+  padding: 10px;
+  border: 2px solid #a8c8ff;
+  border-radius: 10px;
+  background: white;
+  font-size: 1rem;
+  color: #005fa3;
+  cursor: pointer;
+}
+
+.search-button {
+  padding: 10px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.search-button:hover {
+  background: #1d4ed8;
 }

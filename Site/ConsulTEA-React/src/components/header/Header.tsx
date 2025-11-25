@@ -98,6 +98,7 @@ export default function Header() {
                 <nav className="space-x-4">
                     <a href="/" className="hover:underline">Início</a>
                     <a href="/see-patients" className="hover:underline">Ver Pacientes</a>
+                    <a href="/appointmentForNewPatient" className="hover:underline">Nova anamnese</a>
                     {!isLoggedIn ? (
                         <a href="/login" className="hover:underline">Login</a>
                     ) : (
@@ -146,6 +147,7 @@ export default function Header() {
                 <nav className="space-x-4">
                     <a href="/" className="hover:underline">Início</a>
                     <a href="/register-patient" className="hover:underline">Cadastrar Paciente</a>
+                    <a href="/appointmentForNewPatient" className="hover:underline">Nova anamnese</a>
                     {!isLoggedIn ? (
                         <a href="/login" className="hover:underline">Login</a>
                     ) : (
@@ -194,6 +196,33 @@ export default function Header() {
                 <nav className="space-x-4">
                     <a href="/" className="hover:underline">Início</a>
                     <a href="/see-patients" className="hover:underline">Ver Pacientes</a>
+                    <a href="/appointmentForNewPatient" className="hover:underline">Nova anamnese</a>
+
+                    {!isLoggedIn ? (
+                        <a href="/login" className="hover:underline">Login</a>
+                    ) : (
+                        <>
+                            <button onClick={handleLogout} className="hover:underline">
+                                Sair
+                            </button>
+                        </>
+                    )}
+                </nav>
+            </div>
+        </header>
+        );
+    }
+
+    if (location.pathname === "/appointmentForNewPatient") {
+        return (
+        <header className="bg-blue-600 text-white p-4 shadow-md">
+            <div className="w-full flex justify-between items-center px-8">
+                <h1 className="text-2xl font-bold">ConsulTEA</h1>
+
+                <nav className="space-x-4">
+                    <a href="/" className="hover:underline">Início</a>
+                    <a href="/see-patients" className="hover:underline">Ver Pacientes</a>
+                    <a href="/register-patient" className="hover:underline">Cadastrar Paciente</a>
                     {!isLoggedIn ? (
                         <a href="/login" className="hover:underline">Login</a>
                     ) : (
