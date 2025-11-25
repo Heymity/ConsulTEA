@@ -49,7 +49,7 @@
 
 /* ===== Conteúdo ===== */
 .autism-content {
-  max-width: 1100px;
+  max-width: 900px;
   margin: 0 auto; /* remove margem superior/inferior que criava “gaps” */
   padding: 2rem 1.5rem;
   background-color: white; /* 👈 fundo único e contínuo */
@@ -60,9 +60,21 @@
   flex: 1;
 }
 
+.autism-image {
+  width: 100%;            /* imagem nunca vai passar da largura do container */
+  max-height: 350px;      /* limite opcional para evitar imagens muito altas */
+  object-fit: contain;    /* faz a imagem caber SEM cortar */
+  border-radius: 8px;     /* opcional, deixa mais bonito */
+  display: block;
+  margin: 12px auto;
+}
+
 .autism-content section {
   margin-bottom: 0; /* 👈 remove o espaço entre as seções */
   padding: 2rem 0; /* mantém espaçamento interno para respirar */
+  align-self: center;
+  align-items: center;
+  align-content: center;
 }
 
 .autism-content section:last-child {

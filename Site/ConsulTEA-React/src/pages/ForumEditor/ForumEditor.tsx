@@ -60,6 +60,7 @@ export default function ForumEditor() {
     }
 
     alert("Publicação criada!");
+    window.location.href = "/section-selection-page"
   };
 
   return (
@@ -138,7 +139,7 @@ export default function ForumEditor() {
 
         <button
         className="bt"
-        onClick={() => { window.location.href = "/autism-info"; }}
+        onClick={() => { window.location.href = "/section-selection-page"; }}
         >
             Voltar
         </button>

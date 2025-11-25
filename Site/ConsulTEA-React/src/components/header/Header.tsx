@@ -20,7 +20,32 @@ export default function Header() {
         window.location.href = "/login";
     };
 
-    if (location.pathname === "/autism-info") {
+    if (location.pathname.startsWith("/autism-info/")) {
+        return (
+        <header className="bg-blue-600 text-white p-4 shadow-md">
+            <div className="w-full flex justify-between items-center px-8">
+                <h1 className="text-2xl font-bold">ConsulTEA</h1>
+
+                <nav className="space-x-4">
+                    <a href="/" className="hover:underline">Início</a>
+                    <a href="/section-selection-page" className="hover:underline">Escolher Seção</a>
+                {userRole === "admin" && (
+                    <>
+                    <a href="/upload-data" className="hover:underline">
+                        Enviar dados
+                    </a>
+                    <a href="/forum-edit" className="hover:underline">
+                        Adicionar Seções
+                    </a>
+                    </>
+                )}
+                </nav>
+            </div>
+        </header>
+        );
+    }
+
+    if (location.pathname === "/section-selection-page") {
         return (
         <header className="bg-blue-600 text-white p-4 shadow-md">
             <div className="w-full flex justify-between items-center px-8">
@@ -191,7 +216,7 @@ export default function Header() {
 
                 <nav className="space-x-4">
                     <a href="/" className="hover:underline">Início</a>
-                    <a href="/autism-info" className="hover:underline">Dados</a>
+                    <a href="/section-selection-page" className="hover:underline">Dados</a>
 
                     {!isLoggedIn ? (
                         <a href="/login" className="hover:underline">Login</a>
