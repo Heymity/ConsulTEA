@@ -18,9 +18,84 @@ public class ForumController(ILogger<ForumController> logger, DataAccessLayer db
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         NumberHandling = JsonNumberHandling.AllowReadingFromString | JsonNumberHandling.WriteAsString | JsonNumberHandling.AllowNamedFloatingPointLiterals,
     };
+
+    [HttpPut("Post/{id:int}")]
+    [Authorize("Admin")]
+    public async Task<IActionResult> EditPost(int id, [FromBody] ForumPost post)
+    {
+        logger.LogInformation("Edit Post {Id}", id);
+        
+        try
+        {
+            await using var conn = await dbService.GetConnection();
+            await using var transaction = await conn.BeginTransactionAsync();
+
+            try
+            {
+                const string query = "SELECT * FROM bd_forum_post WHERE id=@id";
+
+                await using var cmdPost = new NpgsqlCommand(query, conn, transaction);
+                cmdPost.Parameters.AddWithValue("id", id);
+
+                var postId = await cmdPost.ExecuteNonQueryAsync();
+
+                if (!string.IsNullOrEmpty(post.Title))
+                {
+                    const string titleQuery = """
+                                              UPDATE bd_forum_post
+                                              SET title = @title    
+                                              WHERE id = @post_id;
+                                              """;
+
+                    await using var cmdTitle = new NpgsqlCommand(titleQuery, conn, transaction);
+                    cmdTitle.Parameters.AddWithValue("post_id", postId);
+                    cmdTitle.Parameters.AddWithValue("title", post.Title);
+                }
+
+                if (post.Sections?.Any() ?? false)
+                {
+                    const string secQuery = """
+                                              UPDATE bd_forum_section
+                                              SET type = @type, text = @text, image_uri = @imageUri, graph_type = @graphType, section_order = @sectionOrder
+                                              WHERE id = @section_id;
+                                              """;
+                                             
+                    
+                    foreach (var sec in post.Sections)
+                    {
+                        await using var secCmd = new NpgsqlCommand(secQuery, conn, transaction);
+                        secCmd.Parameters.AddWithValue("section_id", sec.SectionId);
+                        secCmd.Parameters.AddWithValue("type", sec.Type);
+                        secCmd.Parameters.AddWithValue("text", sec.Text);
+                        secCmd.Parameters.AddWithValue("imageUri", sec.ImageUri);
+                        secCmd.Parameters.AddWithValue("graphType", sec.GraphType);
+                        secCmd.Parameters.AddWithValue("sectionOrder", sec.SectionOrder);
+                    
+                        await secCmd.ExecuteNonQueryAsync();
+                    }
+
+                }
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Insert Post");
+                await transaction.RollbackAsync();
+                return BadRequest(ex.Message);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Insert Appointment Request");
+            return StatusCode(500, "Internal Server Error");
+        }
+
+        return Ok(post);
+    }
     
     [HttpPost("Post")]
-    //[Authorize("Admin")]
+    [Authorize("Admin")]
     public async Task<IActionResult> CreatePost([FromBody] ForumPost post)
     {
         logger.LogInformation("Insert Post");
@@ -170,6 +245,49 @@ public class ForumController(ILogger<ForumController> logger, DataAccessLayer db
 
             return Ok(post);
 
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Insert Appointment Request");
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
+
+    [HttpGet("Post")]
+    [AllowAnonymous]
+    public async Task<IActionResult> ListPosts()
+    {
+        logger.LogInformation("List Post");
+
+        try
+        {
+            await using var conn = await dbService.GetConnection();
+            
+            const string query = """
+                                 SELECT post.id AS post_id, title
+                                 FROM bd_forum_post AS post
+                                 ORDER BY post.title
+                                 """;
+
+            await using var cmd = new NpgsqlCommand(query, conn);
+            
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            var posts = new List<ForumPost>();
+            
+            while (await reader.ReadAsync())
+            {
+                var post = new ForumPost
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("post_id")),
+                    Title = reader.GetString(reader.GetOrdinal("title")),
+                    Sections = new List<PostSection>()
+                };
+                
+                posts.Add(post);
+            }
+            
+            return Ok(posts);
         }
         catch (Exception ex)
         {
