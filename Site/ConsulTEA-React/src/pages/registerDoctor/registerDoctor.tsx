@@ -4,7 +4,7 @@ import './RegisterDoctor.css';
 import { useState } from 'react';
 
 export default function RegisterDoctor() {
-  const [formData, setFormData] = useState({
+  const [form, setForm] = useState({
     name: '',
     crm: '',
     cpf: '',
@@ -13,15 +13,40 @@ export default function RegisterDoctor() {
     password: '',
   });
 
+ const [error, setError] = useState<string | null>(null);
+ const [loading, setLoading] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(formData);
-    alert('Médico registrado com sucesso! (mock)');
-  };
+const apiRegister = async (name: string, crm: string, cpf: string, specialty: string, email: string, password: string) => {
+    const token = localStorage.getItem("auth_token");
+    try {const res = await fetch("https://localhost:52467/Doctor/post/register", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${token}`, 
+          "Content-Type": "application/json" },
+        body: JSON.stringify({ Name: name, Crm: crm, Cpf: cpf, Specialty: specialty, Email: email, Password: password}),
+    });
+    if (!res.ok) throw new Error("Register failed");
+    return res.json();}
+    finally {setLoading(false)}
+    
+};
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+         e.preventDefault(); 
+        setLoading(true);
+        try {
+            const result = await apiRegister(form.name, form.crm, form.cpf.trim(), form.specialty, form.email, form.password);
+        } catch (err: any) {
+            setError(err?.message ?? "register failed");
+            console.log('Registration failed', error)
+        } finally {
+            setLoading(false);
+             window.location.href = "/see-doctors";
+        }
+    };
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-gray-800 bg-blue-50">
@@ -31,7 +56,7 @@ export default function RegisterDoctor() {
       {/* Form Section */}
       <main className="flex-grow w-full flex justify-center py-16 px-4">
         <form
-          onSubmit={handleSubmit}
+          onSubmit={onSubmit}
           className="bg-white shadow-lg rounded-xl p-10 w-full max-w-2xl"
         >
           <h2 className="text-4xl font-bold text-blue-700 mb-8 text-center">
@@ -40,7 +65,7 @@ export default function RegisterDoctor() {
 
           <div className="space-y-5">
             {[
-                { label: 'Nome completo', name: 'nome', type: 'text' },
+                { label: 'Nome completo', name: 'name', type: 'text' },
                 { label: 'CRM', name: 'crm', type: 'text' },
                 { label: 'CPF', name: 'cpf', type: 'text' }, 
                 { label: 'Especialidade', name: 'specialty', type: 'text' },
@@ -54,9 +79,11 @@ export default function RegisterDoctor() {
                 <input
                   type={field.type || 'text'}
                   name={field.name}
-                  value={(formData as any)[field.name]}
+                  value={(form as any)[field.name]}
                   onChange={handleChange}
                   className="form-input"
+                  style={{ color: 'black' }}
+                  disabled={loading}
                 />
               </div>
             ))}

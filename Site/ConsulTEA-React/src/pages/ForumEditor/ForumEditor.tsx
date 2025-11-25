@@ -250,6 +250,7 @@ export default function ForumEditor() {
     }
 
     alert("Publicação criada!");
+    window.location.href = "/section-selection-page"
   };
 
   const removeSection = (index: number) => {
@@ -516,7 +517,7 @@ export default function ForumEditor() {
 
           <button
             className="bt"
-            onClick={() => { window.location.href = "/autism-info"; }}
+            onClick={() => { window.location.href = "/section-selection-page"; }}
             style={{ marginLeft: 8 }}
           >
             Voltar
