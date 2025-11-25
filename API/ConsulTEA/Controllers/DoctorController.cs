@@ -127,7 +127,7 @@ public class DoctorController : ControllerBase
             Email = reader.GetString(reader.GetOrdinal("email")),
             Name = reader.GetString(reader.GetOrdinal("name")),
             Specialty = reader.GetString(reader.GetOrdinal("specialty")),
-            Id = reader.GetInt32(reader.GetOrdinal("id")),
+            Id = reader.GetInt32(reader.GetOrdinal("id_doctor")),
         };
     }
     
