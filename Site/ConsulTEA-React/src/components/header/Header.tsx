@@ -31,9 +31,6 @@ export default function Header() {
                     <a href="/section-selection-page" className="hover:underline">Escolher Seção</a>
                 {userRole === "admin" && (
                     <>
-                    <a href="/upload-data" className="hover:underline">
-                        Enviar dados
-                    </a>
                     <a href="/forum-edit" className="hover:underline">
                         Adicionar Seções
                     </a>
@@ -55,9 +52,6 @@ export default function Header() {
                     <a href="/" className="hover:underline">Início</a>
                 {userRole === "admin" && (
                     <>
-                    <a href="/upload-data" className="hover:underline">
-                        Enviar dados
-                    </a>
                     <a href="/forum-edit" className="hover:underline">
                         Adicionar Seções
                     </a>
@@ -271,7 +265,3 @@ export default function Header() {
         </header>
     );
 }
-
-
-        // <Route path="/add-appointment" element={<AddAppointment />} />
-        // <Route path="*" element={<div>404 Not Found</div>} />
