@@ -24,9 +24,7 @@ https://dotnet.microsoft.com/download
 
 ### 🔹 Banco de dados
 
-Precisa adicionar
-
-Exemplo (SQL Server local):
+Configure um banco de daods PostgreSQL utilizando o script SQL fornecido na pasta principal do repositório, seja local ou não. Use as informações de conexão desse banco de dados no item 3 da seção [Rodando a API](#1️⃣ Rodando a API (C# / .NET))
 
 # 🚀 Como Rodar o Projeto
 
@@ -44,7 +42,12 @@ API/ConsulTEA
 dotnet restore
 ```
 
-3. Rodar a API:
+3. Configurar o dotnet-secrets com a conexão ao banco de dados substituindo os X pelos dados de sua conexão com o banco de dados
+```
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:postgres" "Server=XXX.XXX;Port=XXXX(5432);Database=labsoft;Username=XXXXXXXXXX;Password=XXXXXXXX;"
+```
+4. Rodar a API:
 
 ```
 dotnet run
@@ -76,13 +79,13 @@ npm install
 3. Inicie o projeto:
 
 ```
-npm start
+npm run dev
 ```
 
 A aplicação abrirá em:
 
 ```
-http://localhost:3000
+http://localhost:5173
 ```
 
 ---
