@@ -333,7 +333,7 @@ ALTER TABLE ONLY public.patientidentification ALTER COLUMN id_patient SET DEFAUL
 -- Data for Name: bd_admin; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.bd_admin OVERRIDING SYSTEM VALUE VALUES (4, '45450930860', '$2a$11$.W9z7H8yVSnqEQCt4TthZuoVJNBVRYolE61gj.1C0tpTSMzguEiHm', '2025-11-04 20:25:34.263282', '2025-11-04 20:25:34.263282');
+INSERT INTO public.bd_admin OVERRIDING SYSTEM VALUE VALUES (4, '70949459062', '$2a$11$.W9z7H8yVSnqEQCt4TthZuoVJNBVRYolE61gj.1C0tpTSMzguEiHm', '2025-11-04 20:25:34.263282', '2025-11-04 20:25:34.263282');
 INSERT INTO public.bd_admin OVERRIDING SYSTEM VALUE VALUES (5, '0', '$2a$11$HU2yfxRJ5SAKQAyQHs7YjO905ajMz62/0ilei5FlM42vkAML7qlAK', '2025-11-04 20:27:06.213237', '2025-11-04 20:27:06.213237');
 
 
@@ -455,8 +455,6 @@ INSERT INTO public.patientidentification VALUES (1, 'Lucas Cavalari', '123456789
 INSERT INTO public.patientidentification VALUES (4, 'Frankie Emmerich', '08057565748', '2025-06-01', '12938098320', 'Irma Hackett', '54905908823', '2025-11-11 20:27:30.516816', '2025-11-11 20:27:30.516816');
 INSERT INTO public.patientidentification VALUES (5, 'Courtney Bailey-Howe', '17680003106', '2025-08-12', '40934568207', 'Tami Wehner', '63978548563', '2025-11-11 20:27:33.472183', '2025-11-11 20:27:33.472183');
 INSERT INTO public.patientidentification VALUES (6, 'Diane Cronin Jr.', '12242123394', '2025-02-10', '14991011795', 'Woodrow Wolff', '21905877672', '2025-11-11 20:27:34.24257', '2025-11-11 20:30:01.194005');
-INSERT INTO public.patientidentification VALUES (24, 'Rodrigo', '45450930860', '2005-05-30', '11908273484902', 'João', '119828549020', '2025-12-02 17:25:11.63926', '2025-12-02 17:25:11.63926');
-
 
 --
 -- TOC entry 3486 (class 0 OID 0)
