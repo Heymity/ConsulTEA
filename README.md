@@ -24,7 +24,7 @@ https://dotnet.microsoft.com/download
 
 ### 🔹 Banco de dados
 
-Configure um banco de daods PostgreSQL utilizando o script SQL fornecido na pasta principal do repositório, seja local ou não. Use as informações de conexão desse banco de dados no item 3 da seção [Rodando a API](#1️⃣ Rodando a API (C# / .NET))
+Configure um banco de daods PostgreSQL utilizando o script SQL fornecido na pasta DB do repositório, seja local ou não. Use as informações de conexão desse banco de dados no item 3 da seção Rodando a API
 
 # 🚀 Como Rodar o Projeto
 
@@ -91,3 +91,12 @@ http://localhost:5173
 ---
 
 Se tiver qualquer dúvida sobre configuração, build ou execução, basta abrir uma issue no repositório.
+
+## Utilizando o Site
+
+Com o site rodando, pode-se ver os dados atraves da aba de dados na barra de navegação. 
+* Pode-se realizar o login como admin através do cpf 70949459062 e senha 1234.
+* Pode-ser realizar o login como médico através do cpf 48717360242 e senha 1234.
+
+Logado como administrador, na aba Ver Médicos pode-se ver os médicos atuais e cadastrar novos; na aba de Dados pode-se cadastrar novos posts, com textos, imagens, e gráficos.
+Logado como médico pode-se cadastrar novos pacientes e ver os pacientes com os quais seu médico tem anaminésias cadastradas. Pode-se cadastrar anaminésias novas em pacientes com anaminésias ja existentes e em pacientes recém cadastrados
