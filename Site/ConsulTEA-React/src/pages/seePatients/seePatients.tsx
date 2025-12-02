@@ -35,11 +35,10 @@ export default function SeePatients() {
     try {
       setLoading(true);
 
-      const token = localStorage.getItem("auth_token"); // ou onde você salvou
-      const url = "http://localhost:5000/Patient/get/Doctor";
+      const token = localStorage.getItem("auth_token");
+      const urlPatients = "http://localhost:5000/Patient/get/Doctor";
 
-
-      const res = await fetch(url, {
+      const res = await fetch(urlPatients, {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
@@ -47,23 +46,46 @@ export default function SeePatients() {
         }
       });
 
-      if (!res.ok) {
-        throw new Error("Erro ao buscar pacientes");
-      }
-
+      if (!res.ok) throw new Error("Erro ao buscar pacientes");
       const data = await res.json();
 
-      // MAPEAMENTO dos nomes enviados pelo backend → nomes usados no front, pq eu postei cringe
-      const mappedPatients: Patient[] = data.map((p: any) => ({
-        id: p.id,
-        name: p.name,
-        cpf: p.cpf,
-        birth: p.birthDate,              // ajustado
-        contact_phone: p.contactPhone,   // ajustado
-        guardian_name: p.guardianName,   // ajustado
-        guardian_contact: p.guardianContact, // ajustado
-        anamneses: [] // virá vazio até integrarmos o backend de anamneses
-      }));
+      // Mapeamento dos dados do paciente
+      const mappedPatients: Patient[] = await Promise.all(
+        data.map(async (p: any) => {
+          const patient: Patient = {
+            id: p.id,
+            name: p.name,
+            cpf: p.cpf,
+            birth: p.birthDate,
+            contact_phone: p.contactPhone,
+            guardian_name: p.guardianName,
+            guardian_contact: p.guardianContact,
+            anamneses: []
+          };
+
+          // BUSCA DE ANAMNESES
+          const anamnesesRes = await fetch(
+            `http://localhost:5000/Appointment/get/Patient/${p.id}`,
+            {
+              method: "GET",
+              headers: {
+                "Authorization": `Bearer ${token}`
+              }
+            }
+          );
+
+          if (anamnesesRes.ok) {
+            const anamnesesData = await anamnesesRes.json();
+
+            patient.anamneses = anamnesesData.map((a: any) => ({
+              id: a.idAppointment,
+              date: new Date(a.date).toLocaleDateString("pt-BR")
+            }));
+          }
+
+          return patient;
+        })
+      );
 
       setPatients(mappedPatients);
       setPatientsOriginal(mappedPatients);
@@ -78,6 +100,7 @@ export default function SeePatients() {
 
   fetchPatients();
 }, []);
+
 
 
   const toggleExpand = (id: number) => {
@@ -189,7 +212,11 @@ export default function SeePatients() {
                     <ul className="anamnese-list">
                       {p.anamneses && p.anamneses.length > 0 ? (
                         p.anamneses.map(a => (
-                          <li key={a.id} className="anamnese-item">
+                          <li
+                            key={a.id}
+                            className="anamnese-item anamnese-link"
+                            onClick={() => navigate(`/appointment/${a.id}`)}
+                          >
                             📄 {a.date}
                           </li>
                         ))

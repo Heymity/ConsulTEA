@@ -85,3 +85,16 @@
 .search-button:hover {
   background: #1d4ed8;
 }
+
+.anamnese-link {
+  list-style: none;
+  cursor: pointer;
+  color: #005fa3;
+  font-weight: 600;
+}
+
+.anamnese-link:hover {
+  list-style: none;
+  text-decoration: underline;
+  color: #0077cc;
+}
