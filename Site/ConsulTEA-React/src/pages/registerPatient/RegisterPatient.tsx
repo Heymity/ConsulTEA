@@ -87,7 +87,7 @@ const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                   name={field.name}
                   value={(form as any)[field.name]}
                   onChange={handleChange}
-                  required={field.name !== 'guardian' && field.name !== 'guartianContact'}
+                  required={field.name !== 'guardian' && field.name !== 'guardianContact'}
                   className="form-input"
                    style={{ color: 'black' }}
                   disabled={loading}
